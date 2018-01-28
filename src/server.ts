@@ -35,7 +35,7 @@ const app = express();
 
 // cors has to be up here
 const corsOptions = {
-  origin: "http://localhost:3000", // TODO add enviroments
+  origin: process.env.ALLOWED_CLIENT_ORIGIN, // TODO add enviroments
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
   credentials: true // <-- REQUIRED backend setting
 };
