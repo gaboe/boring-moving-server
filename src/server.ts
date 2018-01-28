@@ -45,7 +45,7 @@ app.use(cors(corsOptions));
  * Connect to MongoDB.
  */
 // mongoose.Promise = global.Promise;
-mongoose.connect(process.env.MONGOLAB_URI || process.env.MONGODB_URI, {
+mongoose.connect(process.env.MONGOLAB_URI, {
   useMongoClient: true
 });
 

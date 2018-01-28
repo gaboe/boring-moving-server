@@ -10,6 +10,7 @@
   "license": "MIT",
   "scripts": {
     "dev": " yarn build-ts && yarn tslint && yarn dev-watch",
+    "prod": "yarn build && node ./dist/server.js",
     "dev-watch":
       "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"yarn watch-ts\" \"yarn serve\"",
     "start": "yarn run build && yarn run watch",
@@ -99,5 +100,12 @@
     "supertest": "^2.0.1",
     "ts-jest": "^19.0.8",
     "tslint": "^5.0.0"
+  },
+  "now": {
+    "alias": "gabojepan",
+    "env": {
+      "MONGOLAB_URI": "mongodb://dev:666@ds117178.mlab.com:17178/boring-moving",
+      "SESSION_SECRET": "ashdfjhasdlkjfhalksdjhflak"
+    }
   }
 }
