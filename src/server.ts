@@ -44,8 +44,7 @@ app.use(cors(corsOptions));
 /**
  * Connect to MongoDB.
  */
-// mongoose.Promise = global.Promise;
-mongoose.connect(process.env.MONGOLAB_URI, {
+mongoose.connect(process.env.MONGOLAB_URI || process.env.MONGODB_URI, {
   useMongoClient: true
 });
 
@@ -71,7 +70,7 @@ app.use(
     saveUninitialized: true,
     secret: process.env.SESSION_SECRET,
     store: new MongoStore({
-      url: process.env.MONGODB_URI || process.env.MONGOLAB_URI,
+      url: process.env.MONGOLAB_URI || process.env.MONGODB_URI,
       autoReconnect: true
     })
   })
