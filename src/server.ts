@@ -26,7 +26,7 @@ const MongoStore = mongo(session);
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
  */
-dotenv.config({ path: ".env.development" });
+dotenv.config();
 
 /**
  * Create Express server.
@@ -45,12 +45,12 @@ app.use(cors(corsOptions));
  * Connect to MongoDB.
  */
 // mongoose.Promise = global.Promise;
-mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI, {
+mongoose.connect(process.env.MONGOLAB_URI || process.env.MONGODB_URI, {
   useMongoClient: true
 });
 
-mongoose.connection.on("error", () => {
-  console.log("MongoDB connection error. Please make sure MongoDB is running.");
+mongoose.connection.on("error", e => {
+  console.log(`MongoDB connection error: ${e}`);
   process.exit();
 });
 
