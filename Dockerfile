@@ -3,8 +3,8 @@ FROM node:9-slim
 WORKDIR /boring-moving-server
 
 COPY . /boring-moving-server
-RUN rm -rf node_modules && npm install && npm run-script build
+RUN yarn install && yarn run build
 
 
 EXPOSE 3000
-CMD [ "npm", "run-script","prod" ]
+CMD [ "yarn", "run","prod" ]
