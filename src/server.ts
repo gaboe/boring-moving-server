@@ -33,6 +33,7 @@ dotenv.config();
  */
 const app = express();
 
+console.log(`Allowing connections from: ${process.env.ALLOWED_CLIENT_ORIGIN}`);
 // cors has to be up here
 const corsOptions = {
   origin: process.env.ALLOWED_CLIENT_ORIGIN, // TODO add enviroments
