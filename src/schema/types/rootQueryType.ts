@@ -1,6 +1,6 @@
 import * as graphql from "graphql";
 import { getByID } from "./../../services/RuleService";
-import UserType from "./userType";
+import { UserType } from "./userType";
 import { RuleType } from "./ruleType";
 
 const { GraphQLObjectType, GraphQLID, GraphQLNonNull } = graphql;

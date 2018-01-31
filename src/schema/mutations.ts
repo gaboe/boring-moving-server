@@ -1,6 +1,6 @@
 import { GraphQLObjectType, GraphQLString, GraphQLID } from "graphql";
 
-import UserType from "./types/userType";
+import { UserType } from "./types/userType";
 import * as AuthService from "./../services/auth";
 import { RuleType } from "./../schema/types/ruleType";
 import { addRule } from "./../services/RuleService";

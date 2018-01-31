@@ -8,7 +8,6 @@ const addRule = (
   content: string
 ) => {
   const rule = new Rule({ userID, sender, subject, content });
-
   rule.save();
   return rule;
 };
@@ -19,7 +18,6 @@ const getByID = (id: string) => {
 
 const getUserRules = (userID: string) => {
   return Rule.find({ userID: userID }, (err, res) => {
-    console.log(res);
     return res;
   });
 };
