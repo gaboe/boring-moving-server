@@ -1,4 +1,5 @@
 import User from "./../models/User";
+import { Rule } from "./../models/rules/Rule";
 
 const addRule = (
   userID: string,
@@ -6,9 +7,12 @@ const addRule = (
   subject: string,
   content: string
 ) => {
-  User.findById(userID, (err, res) => {
-    // res.addRule("string");
-  });
+  const rule = new Rule();
+  rule.sender = sender;
+  rule.subject = subject;
+  rule.content = subject;
+
+  rule.save();
 };
 
 export { addRule };

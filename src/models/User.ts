@@ -1,13 +1,13 @@
 import * as bcrypt from "bcrypt-nodejs";
 import * as crypto from "crypto";
 import * as mongoose from "mongoose";
-import { ruleSchema, Rule } from "./Rule";
+import { Rule } from "./rules/Rule";
 import { ObjectId } from "bson";
 
 const userSchema = new mongoose.Schema({
   email: String,
-  password: String,
-  rules: [ruleSchema]
+  password: String
+  // rules: [Rule]
 });
 
 userSchema.pre("save", function save(next) {
