@@ -1,14 +1,19 @@
 import * as graphql from "graphql";
 import { RuleType } from "./ruleType";
-
-const { GraphQLObjectType, GraphQLString, GraphQLID } = graphql;
+import { getUserRules } from "./../../services/RuleService";
+const { GraphQLObjectType, GraphQLString, GraphQLID, GraphQLList } = graphql;
 
 const UserType = new GraphQLObjectType({
   name: "UserType",
   fields: {
     id: { type: GraphQLID },
     email: { type: GraphQLString },
-    rules: { type: RuleType }
+    rules: {
+      type: new GraphQLList(RuleType),
+      resolve(parentValue: any, _) {
+        return getUserRules(parentValue._id);
+      }
+    }
   }
 });
 

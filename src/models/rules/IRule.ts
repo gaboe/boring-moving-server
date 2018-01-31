@@ -1,4 +1,7 @@
+import { ObjectID } from "bson";
+
 interface IRule {
+  userID: string;
   sender: string;
   subject: string;
   content: string;
