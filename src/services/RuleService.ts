@@ -7,7 +7,7 @@ const addRule = (
   content: string
 ) => {
   User.findById(userID, (err, res) => {
-    res.addRule("string");
+    // res.addRule("string");
   });
 };
 
