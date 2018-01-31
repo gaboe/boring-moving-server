@@ -1,8 +1,11 @@
 import * as bcrypt from "bcrypt-nodejs";
 import * as crypto from "crypto";
 import * as mongoose from "mongoose";
-import { Rule } from "./rules/Rule";
+import { Rule } from "./../rules/Rule";
 import { ObjectId } from "bson";
+import { IUser } from "./IUser";
+
+interface IUserModel extends IUser, mongoose.Document {}
 
 const userSchema = new mongoose.Schema({
   email: String,
@@ -48,5 +51,6 @@ userSchema.methods.addRule = function(rule: any) {
 };
 
 // export const User: UserType = mongoose.model<UserType>('User', userSchema);
-const User = mongoose.model("User", userSchema);
-export default User;
+const User = mongoose.model<IUserModel>("User", userSchema);
+
+export { User, userSchema };

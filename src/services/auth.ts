@@ -1,4 +1,5 @@
-import User from "./../models/User";
+import { User } from "./../models/users/User";
+import { IUser } from "./../models/users/IUser";
 const mongoose = require("mongoose");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;

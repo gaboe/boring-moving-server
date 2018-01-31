@@ -1,4 +1,4 @@
-import User from "./../models/User";
+import { User } from "./../models/users/User";
 import { Rule } from "./../models/rules/Rule";
 
 const addRule = (
@@ -15,4 +15,7 @@ const addRule = (
   rule.save();
 };
 
-export { addRule };
+const getByID = (id: string) => {
+  return Rule.findById(id);
+};
+export { addRule, getByID };

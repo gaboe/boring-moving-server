@@ -13,4 +13,8 @@ const ruleSchema = new mongoose.Schema({
 
 const Rule = mongoose.model<IRuleModel>("Rule", ruleSchema);
 
-export { Rule };
+function getRuleByID(id: string) {
+  return Rule.findById(id);
+}
+
+export { Rule, getRuleByID };
