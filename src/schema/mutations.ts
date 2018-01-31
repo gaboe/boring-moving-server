@@ -1,7 +1,9 @@
-import { GraphQLObjectType, GraphQLString } from "graphql";
+import { GraphQLObjectType, GraphQLString, GraphQLID } from "graphql";
 
 import UserType from "./types/userType";
 import * as AuthService from "./../services/auth";
+import { RuleType } from "./../schema/types/ruleType";
+import { addRule } from "./../services/RuleService";
 
 const mutation = new GraphQLObjectType({
   name: "Mutation",
@@ -32,6 +34,18 @@ const mutation = new GraphQLObjectType({
       },
       resolve(parentValue, { email, password }, req) {
         return AuthService.login({ email, password, req });
+      }
+    },
+    addRule: {
+      type: RuleType,
+      args: {
+        userID: { type: GraphQLID },
+        sender: { type: GraphQLString },
+        subject: { type: GraphQLString },
+        content: { type: GraphQLString }
+      },
+      resolve(parentValue, { userID, sender, subject, content }, req) {
+        return addRule(userID, sender, subject, content);
       }
     }
   }

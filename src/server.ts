@@ -33,7 +33,9 @@ dotenv.config();
  */
 const app = express();
 
-console.log(`Allowing connections from: ${process.env.ALLOWED_CLIENT_ORIGIN}`);
+console.log(
+  `\nAllowing connections from: ${process.env.ALLOWED_CLIENT_ORIGIN}`
+);
 // cors has to be up here
 const corsOptions = {
   origin: process.env.ALLOWED_CLIENT_ORIGIN, // TODO add enviroments
@@ -48,7 +50,10 @@ app.use(cors(corsOptions));
 /**
  * Connect to MongoDB.
  */
-mongoose.connect(process.env.MONGOLAB_URI || process.env.MONGODB_URI, {
+const mongoURL = process.env.MONGOLAB_URI || process.env.MONGODB_URI;
+console.log(`\nConnecting to db: ${mongoURL}\n`);
+
+mongoose.connect(mongoURL, {
   useMongoClient: true
 });
 
@@ -74,7 +79,7 @@ app.use(
     saveUninitialized: true,
     secret: process.env.SESSION_SECRET,
     store: new MongoStore({
-      url: process.env.MONGOLAB_URI || process.env.MONGODB_URI,
+      url: mongoURL,
       autoReconnect: true
     })
   })
