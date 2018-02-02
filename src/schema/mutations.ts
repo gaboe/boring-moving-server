@@ -4,6 +4,10 @@ import { UserType } from "./types/userType";
 import * as AuthService from "./../services/auth";
 import { RuleType } from "./../schema/types/ruleType";
 import { addRule } from "./../services/RuleService";
+import { IUserModel } from "./../models/users/User";
+import { Request } from "express";
+import { IAuth } from "./../models/auth/IAuth";
+import { IRuleModel } from "./../models/rules/Rule";
 
 const mutation = new GraphQLObjectType({
   name: "Mutation",
@@ -14,8 +18,8 @@ const mutation = new GraphQLObjectType({
         email: { type: GraphQLString },
         password: { type: GraphQLString }
       },
-      resolve(parentValue, { email, password }, req) {
-        return AuthService.signup({ email, password, req });
+      resolve(_, { email, password }: IAuth, req: Request) {
+        return AuthService.signup({ email, password }, req);
       }
     },
     logout: {
@@ -32,8 +36,8 @@ const mutation = new GraphQLObjectType({
         email: { type: GraphQLString },
         password: { type: GraphQLString }
       },
-      resolve(parentValue, { email, password }, req) {
-        return AuthService.login({ email, password, req });
+      resolve(_, { email, password }: IAuth, req: Request) {
+        return AuthService.login({ email, password }, req);
       }
     },
     addRule: {
@@ -44,7 +48,7 @@ const mutation = new GraphQLObjectType({
         subject: { type: GraphQLString },
         content: { type: GraphQLString }
       },
-      resolve(parentValue, { userID, sender, subject, content }, req) {
+      resolve(_, { userID, sender, subject, content }: IRuleModel, __) {
         return addRule(userID, sender, subject, content);
       }
     }

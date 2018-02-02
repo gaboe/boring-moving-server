@@ -1,5 +1,3 @@
-import { ObjectID } from "bson";
-
 interface IRule {
   userID: string;
   sender: string;

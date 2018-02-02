@@ -1,5 +1,8 @@
-import { User } from "./../models/users/User";
+import { User, IUserModel } from "./../models/users/User";
 import { IUser } from "./../models/users/IUser";
+import { Request } from "express";
+import { Error } from "mongoose";
+import { IAuth } from "./../models/auth/IAuth";
 const mongoose = require("mongoose");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
@@ -58,22 +61,22 @@ passport.use(
 // Notice the Promise created in the second 'then' statement.  This is done
 // because Passport only supports callbacks, while GraphQL only supports promises
 // for async code!  Awkward!
-function signup({ email, password, req }: any) {
+function signup({ email, password }: IAuth, req: Request) {
   const user = new User({ email, password });
   if (!email || !password) {
     throw new Error("You must provide an email and password.");
   }
 
   return User.findOne({ email })
-    .then((existingUser: any) => {
+    .then((existingUser: IUserModel) => {
       if (existingUser) {
         throw new Error("Email in use");
       }
       return user.save();
     })
-    .then((user: any) => {
+    .then((user: IUserModel) => {
       return new Promise((resolve, reject) => {
-        req.logIn(user, (err: any) => {
+        req.logIn(user, (err: Error) => {
           if (err) {
             reject(err);
           }
@@ -88,9 +91,9 @@ function signup({ email, password, req }: any) {
 // function returns a function, as its indended to be used as a middleware with
 // Express.  We have another compatibility layer here to make it work nicely with
 // GraphQL, as GraphQL always expects to see a promise for handling async code.
-function login({ email, password, req }: any) {
+function login({ email, password }: IAuth, req: Request) {
   return new Promise((resolve, reject) => {
-    passport.authenticate("local", (err: any, user: any) => {
+    passport.authenticate("local", (err: Error, user: IUserModel) => {
       if (!user) {
         reject("Invalid credentials.");
       }

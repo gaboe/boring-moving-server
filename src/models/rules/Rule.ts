@@ -19,4 +19,4 @@ function getRuleByID(id: string) {
   return Rule.findById(id);
 }
 
-export { Rule, getRuleByID };
+export { Rule, getRuleByID, IRuleModel };

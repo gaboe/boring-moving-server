@@ -22,7 +22,7 @@ userSchema.pre("save", function save(next) {
     if (err) {
       return next(err);
     }
-    bcrypt.hash(user.password, salt, undefined, (err: Error, hash) => {
+    bcrypt.hash(user.password, salt, undefined, (err, hash) => {
       if (err) {
         return next(err);
       }

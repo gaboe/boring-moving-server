@@ -1,6 +1,6 @@
 import { IRule } from "./../rules/IRule";
-
-interface IUser {
+import { IAuth } from "./../auth/IAuth";
+interface IUser extends IAuth {
   email: string;
   password: string;
 
