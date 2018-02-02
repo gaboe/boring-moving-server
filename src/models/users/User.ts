@@ -1,20 +1,20 @@
 import * as bcrypt from "bcrypt-nodejs";
 import * as crypto from "crypto";
-import * as mongoose from "mongoose";
+import { Error, Schema, Document, model } from "mongoose";
 import { Rule } from "./../rules/Rule";
 import { ObjectId } from "bson";
 import { IUser } from "./IUser";
 
-interface IUserModel extends IUser, mongoose.Document {}
+interface IUserModel extends IUser, Document {}
 
-const userSchema = new mongoose.Schema({
+const userSchema = new Schema({
   email: String,
   password: String
   // rules: [Rule]
 });
 
 userSchema.pre("save", function save(next) {
-  const user = this;
+  const user: IUserModel = this;
   if (!user.isModified("password")) {
     return next();
   }
@@ -22,7 +22,7 @@ userSchema.pre("save", function save(next) {
     if (err) {
       return next(err);
     }
-    bcrypt.hash(user.password, salt, undefined, (err: mongoose.Error, hash) => {
+    bcrypt.hash(user.password, salt, undefined, (err: Error, hash) => {
       if (err) {
         return next(err);
       }
@@ -34,23 +34,18 @@ userSchema.pre("save", function save(next) {
 
 userSchema.methods.comparePassword = function(
   candidatePassword: string,
-  callback: (err: any, isMatch: any) => {}
+  callback: (err: Error, isMatch: boolean) => void
 ) {
   bcrypt.compare(
     candidatePassword,
     this.password,
-    (err: mongoose.Error, isMatch: boolean) => {
+    (err: Error, isMatch: boolean) => {
       callback(err, isMatch);
     }
   );
 };
 
-userSchema.methods.addRule = function(rule: any) {
-  const user = this;
-  console.log("hello", user);
-};
-
 // export const User: UserType = mongoose.model<UserType>('User', userSchema);
-const User = mongoose.model<IUserModel>("User", userSchema);
+const User = model<IUserModel>("User", userSchema);
 
-export { User, userSchema };
+export { User, userSchema, IUserModel };
