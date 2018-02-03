@@ -1,12 +1,11 @@
 {
-  "name": "express-typescript-starter",
-  "version": "0.1.0",
-  "description": "A starting point for Node.js express apps with TypeScript",
+  "name": "boring-moving-server",
+  "version": "0.1.1",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sahat/hackathon-starter.git"
+    "url": "https://github.com/gaboe/boring-moving-server"
   },
-  "author": "Bowden Kelly",
+  "author": "Gabriel Ecegi",
   "license": "MIT",
   "scripts": {
     "dev": " yarn build-ts && yarn tslint && yarn dev-watch",
@@ -101,12 +100,5 @@
     "supertest": "^3.0.0",
     "ts-jest": "^22.0.2",
     "tslint": "^5.9.1"
-  },
-  "now": {
-    "alias": "gabojepan",
-    "env": {
-      "MONGOLAB_URI": "mongodb://dev:666@ds117178.mlab.com:17178/boring-moving",
-      "SESSION_SECRET": "ashdfjhasdlkjfhalksdjhflak"
-    }
   }
 }
