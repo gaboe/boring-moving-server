@@ -15,7 +15,7 @@ const UserType = new GraphQLObjectType({
     email: { type: GraphQLString },
     rules: {
       type: new GraphQLList(RuleType),
-      resolve(parentValue: IUserModel, _) {
+      resolve(parentValue: IUserModel) {
         return getUserRules(parentValue._id);
       }
     }

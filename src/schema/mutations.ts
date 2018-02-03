@@ -48,7 +48,7 @@ const mutation = new GraphQLObjectType({
         subject: { type: GraphQLString },
         content: { type: GraphQLString }
       },
-      resolve(_, { userID, sender, subject, content }: IRuleModel, __) {
+      resolve(_, { userID, sender, subject, content }: IRuleModel) {
         return addRule(userID, sender, subject, content);
       }
     }
