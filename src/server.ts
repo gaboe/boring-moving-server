@@ -53,9 +53,7 @@ app.use(cors(corsOptions));
 const mongoURL = process.env.MONGOLAB_URI || process.env.MONGODB_URI;
 console.log(`\nConnecting to db: ${mongoURL}\n`);
 
-mongoose.connect(mongoURL, {
-  useMongoClient: true
-});
+mongoose.connect(mongoURL);
 
 mongoose.connection.on("error", e => {
   console.log(`MongoDB connection error: ${e}`);
