@@ -1,11 +1,11 @@
-import * as mongoose from "mongoose";
+import { model, Document, Schema } from "mongoose";
 
 import { IRule } from "./IRule";
 import { Strategy } from "passport-facebook";
 
-interface IRuleModel extends IRule, mongoose.Document {}
+interface IRuleModel extends IRule, Document {}
 
-const ruleSchema = new mongoose.Schema({
+const ruleSchema = new Schema({
   sender: String,
   subject: String,
   content: String,
@@ -13,7 +13,7 @@ const ruleSchema = new mongoose.Schema({
   userID: String
 });
 
-const Rule = mongoose.model<IRuleModel>("Rule", ruleSchema);
+const Rule = model<IRuleModel>("Rule", ruleSchema);
 
 function getRuleByID(id: string) {
   return Rule.findById(id);
