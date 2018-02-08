@@ -1,13 +1,25 @@
-import { User } from "./../models/users/User";
+import { User, IUserModel } from "./../models/users/User";
 import { Rule } from "./../models/rules/Rule";
+import { Request } from "express";
 
 const addRule = (
-  userID: string,
   sender: string,
   subject: string,
-  content: string
+  content: string,
+  folderName: string,
+  period: number,
+  req: Request
 ) => {
-  const rule = new Rule({ userID, sender, subject, content });
+  const { user } = req;
+  const rule = new Rule({
+    userID: user.id,
+    sender,
+    subject,
+    content,
+    folderName,
+    period
+  });
+
   rule.save();
   return rule;
 };

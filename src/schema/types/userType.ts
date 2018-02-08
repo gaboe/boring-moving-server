@@ -16,7 +16,7 @@ const UserType = new GraphQLObjectType({
     rules: {
       type: new GraphQLList(RuleType),
       resolve(parentValue: IUserModel) {
-        return getUserRules(parentValue._id);
+        return getUserRules(parentValue.id);
       }
     }
   }

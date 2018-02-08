@@ -8,6 +8,7 @@ import { IUserModel } from "./../models/users/User";
 import { Request } from "express";
 import { IAuth } from "./../models/auth/IAuth";
 import { IRuleModel } from "./../models/rules/Rule";
+import { GraphQLInt } from "graphql/type/scalars";
 
 const mutation = new GraphQLObjectType({
   name: "Mutation",
@@ -43,13 +44,18 @@ const mutation = new GraphQLObjectType({
     addRule: {
       type: RuleType,
       args: {
-        userID: { type: GraphQLID },
         sender: { type: GraphQLString },
         subject: { type: GraphQLString },
-        content: { type: GraphQLString }
+        content: { type: GraphQLString },
+        folderName: { type: GraphQLString },
+        period: { type: GraphQLInt }
       },
-      resolve(_, { userID, sender, subject, content }: IRuleModel) {
-        return addRule(userID, sender, subject, content);
+      resolve(
+        _,
+        { sender, subject, content, folderName, period }: IRuleModel,
+        req: Request
+      ) {
+        return addRule(sender, subject, content, folderName, period, req);
       }
     }
   }

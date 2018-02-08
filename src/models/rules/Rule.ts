@@ -6,11 +6,12 @@ import { Strategy } from "passport-facebook";
 interface IRuleModel extends IRule, Document {}
 
 const ruleSchema = new Schema({
+  userID: String,
   sender: String,
   subject: String,
   content: String,
-  period: Number,
-  userID: String
+  folderName: String,
+  period: Number
 });
 
 const Rule = model<IRuleModel>("Rule", ruleSchema);

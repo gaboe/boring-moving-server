@@ -3,6 +3,7 @@ interface IRule {
   sender: string;
   subject: string;
   content: string;
+  folderName: string;
   period: number;
 }
 
