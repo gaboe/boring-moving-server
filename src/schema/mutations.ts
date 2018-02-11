@@ -10,6 +10,7 @@ import { IAuth } from "./../models/auth/IAuth";
 import { IRuleModel } from "./../models/rules/Rule";
 import { GraphQLInt } from "graphql/type/scalars";
 import { NonAuthenificatedUser } from "../models/users/NonAuthentificatedUser";
+import { logInfo } from "../services/LogService";
 
 const mutation = new GraphQLObjectType({
   name: "Mutation",
@@ -23,6 +24,7 @@ const mutation = new GraphQLObjectType({
         lastName: { type: GraphQLString }
       },
       resolve(_, user: NonAuthenificatedUser, req: Request) {
+        logInfo("authentificate mutation", { user }, req.user);
         return AuthService.authentificate(user, req);
       }
     },
