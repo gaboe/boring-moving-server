@@ -1,7 +1,7 @@
 import { IRule } from "./../rules/IRule";
 import { IAuth } from "./../auth/IAuth";
-interface IUser extends IAuth {
-  email: string;
+import { NonAuthenificatedUser } from "./NonAuthentificatedUser";
+interface IUser extends IAuth, NonAuthenificatedUser {
   password: string;
 
   rules: IRule[];

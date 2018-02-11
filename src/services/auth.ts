@@ -3,6 +3,9 @@ import { IUser } from "./../models/users/IUser";
 import { Request } from "express";
 import { Error } from "mongoose";
 import { IAuth } from "./../models/auth/IAuth";
+import { NonAuthenificatedUser } from "../models/users/NonAuthentificatedUser";
+import { reject } from "async";
+import { userExists, getUserByGoogleID } from "./UserService";
 const mongoose = require("mongoose");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
@@ -20,39 +23,6 @@ passport.deserializeUser((id: any, done: any) => {
     done(err, user);
   });
 });
-
-// Instructs Passport how to authenticate a user using a locally saved email
-// and password combination.  This strategy is called whenever a user attempts to
-// log in.  We first find the user model in MongoDB that matches the submitted email,
-// then check to see if the provided password matches the saved password. There
-// are two obvious failure points here: the email might not exist in our DB or
-// the password might not match the saved one.  In either case, we call the 'done'
-// callback, including a string that messages why the authentication process failed.
-// This string is provided back to the GraphQL client.
-passport.use(
-  new LocalStrategy(
-    { usernameField: "email" },
-    (email: string, password: string, done: any) => {
-      User.findOne({ email: email.toLowerCase() }, (err: any, user: any) => {
-        if (err) {
-          return done(err);
-        }
-        if (!user) {
-          return done(null, false, "Invalid Credentials");
-        }
-        user.comparePassword(password, (err: any, isMatch: boolean) => {
-          if (err) {
-            return done(err);
-          }
-          if (isMatch) {
-            return done(null, user);
-          }
-          return done(null, false, "Invalid credentials.");
-        });
-      });
-    }
-  )
-);
 
 // Creates a new user account.  We first check to see if a user already exists
 // with this email address to avoid making multiple accounts with identical addresses
@@ -103,4 +73,79 @@ function login({ email, password }: IAuth, req: Request) {
   });
 }
 
-export { signup, login };
+// Instructs Passport how to authenticate a user using a locally saved email
+// and password combination.  This strategy is called whenever a user attempts to
+// log in.  We first find the user model in MongoDB that matches the submitted email,
+// then check to see if the provided password matches the saved password. There
+// are two obvious failure points here: the email might not exist in our DB or
+// the password might not match the saved one.  In either case, we call the 'done'
+// callback, including a string that messages why the authentication process failed.
+// This string is provided back to the GraphQL client.
+// passport.use(
+//   new LocalStrategy(
+//     { usernameField: "googleID" },
+//     { password: "googleID" },
+//     (googleUser: NonAuthenificatedUser, password: string, done: any) => {
+//       console.log(googleUser);
+//       console.log(password);
+//       console.log(done);
+
+//       User.findOne({ googleID: googleUser.googleID }, (err: any, user: any) => {
+//         if (user) return done(null, user);
+//         const newUser = new User({
+//           email: googleUser.email,
+//           firstName: googleUser.firstName,
+//           lastname: googleUser.lastName,
+//           googleID: googleUser.googleID
+//         });
+//         newUser.save();
+//         return done(null, newUser);
+//       });
+//     }
+//   )
+// );
+
+passport.use(
+  new LocalStrategy(async function(googleID, _, done) {
+    const user = await getUserByGoogleID(googleID);
+    return done(null, user);
+  })
+);
+
+const authentificate = async (user: NonAuthenificatedUser, req: Request) => {
+  if (await userExists(user.googleID)) {
+    return login2(user.googleID, req);
+  } else {
+    const registeredUser = await register(user);
+    return login2(registeredUser.googleID, req);
+  }
+};
+
+const register = async (user: NonAuthenificatedUser) => {
+  const newUser = new User({
+    googleID: user.googleID,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email
+  });
+  await newUser.save();
+  return newUser;
+};
+
+const login2 = (googleID: string, req: Request) => {
+  return new Promise((resolve, reject) => {
+    passport.authenticate(
+      "local",
+      (err: Error, user: IUserModel, info: any) => {
+        if (!user) {
+          reject("Invalid credentials.");
+        }
+        req.login(user, e => {
+          resolve(user);
+        });
+      }
+    )({ body: { username: googleID, password: "empty" } });
+  });
+};
+
+export { signup, login, authentificate };

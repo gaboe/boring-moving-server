@@ -8,9 +8,10 @@ import { IUser } from "./IUser";
 interface IUserModel extends IUser, Document {}
 
 const userSchema = new Schema({
+  googleID: String,
   email: String,
-  password: String
-  // rules: [Rule]
+  firstName: String,
+  lastName: String
 });
 
 userSchema.pre("save", function save(next) {

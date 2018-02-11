@@ -9,10 +9,23 @@ import { Request } from "express";
 import { IAuth } from "./../models/auth/IAuth";
 import { IRuleModel } from "./../models/rules/Rule";
 import { GraphQLInt } from "graphql/type/scalars";
+import { NonAuthenificatedUser } from "../models/users/NonAuthentificatedUser";
 
 const mutation = new GraphQLObjectType({
   name: "Mutation",
   fields: {
+    authentificate: {
+      type: UserType,
+      args: {
+        googleID: { type: GraphQLString },
+        email: { type: GraphQLString },
+        firstName: { type: GraphQLString },
+        lastName: { type: GraphQLString }
+      },
+      resolve(_, user: NonAuthenificatedUser, req: Request) {
+        return AuthService.authentificate(user, req);
+      }
+    },
     signup: {
       type: UserType,
       args: {
