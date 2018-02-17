@@ -11,6 +11,8 @@ import { IRuleModel } from "./../models/rules/Rule";
 import { GraphQLInt } from "graphql/type/scalars";
 import { NonAuthenificatedUser } from "../models/users/NonAuthentificatedUser";
 import { logInfo } from "../services/LogService";
+import { ImapConfigType } from "./types/imapConfigType";
+import { saveImapConfig } from "../services/ImapConfigService";
 
 const mutation = new GraphQLObjectType({
   name: "Mutation",
@@ -71,6 +73,22 @@ const mutation = new GraphQLObjectType({
         req: Request
       ) {
         return addRule(sender, subject, content, folderName, period, req);
+      }
+    },
+    saveImapConfig: {
+      type: ImapConfigType,
+      args: {
+        userName: { type: GraphQLString },
+        password: { type: GraphQLString },
+        host: { type: GraphQLString },
+        port: { type: GraphQLInt }
+      },
+      resolve(
+        _,
+        { userName, password, host, port }: IImapConfig,
+        req: Request
+      ) {
+        return saveImapConfig(userName, password, host, port, req);
       }
     }
   }

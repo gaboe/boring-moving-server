@@ -5,7 +5,7 @@ interface IUser extends IAuth, NonAuthenificatedUser {
   password: string;
 
   rules: IRule[];
-
+  imapConfig: IImapConfig;
   comparePassword(
     password: string,
     callback: (err: Error, isMatch: boolean) => void

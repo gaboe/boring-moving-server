@@ -1,6 +1,6 @@
 import { User } from "./../models/users/User";
 
-const getByID = (id: string) => User.findById(id);
+const getUserByID = (id: string) => User.findById(id);
 
 const getUserByGoogleID = (googleID: string) => User.findOne({ googleID });
 
@@ -9,4 +9,4 @@ const userExists = async (googleID: string): Promise<boolean> => {
   return u.length > 0;
 };
 
-export { getByID, userExists, getUserByGoogleID };
+export { getUserByID, userExists, getUserByGoogleID };

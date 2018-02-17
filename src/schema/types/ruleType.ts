@@ -6,7 +6,7 @@ import {
 } from "graphql";
 
 import { UserType } from "./userType";
-import { getByID } from "./../../services/UserService";
+import { getUserByID } from "./../../services/UserService";
 import { IRuleModel } from "./../../models/rules/Rule";
 import { GraphQLInt } from "graphql/type/scalars";
 const RuleType = new GraphQLObjectType({
@@ -22,7 +22,7 @@ const RuleType = new GraphQLObjectType({
     user: {
       type: UserType,
       resolve(parentValue: IRuleModel) {
-        return getByID(parentValue.userID);
+        return getUserByID(parentValue.userID);
       }
     }
   })
