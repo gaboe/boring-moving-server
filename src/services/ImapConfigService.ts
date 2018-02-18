@@ -28,4 +28,8 @@ const configExists = async (userID: string): Promise<boolean> => {
   return config.length > 0;
 };
 
-export { saveImapConfig };
+const getConfigByUserID = (userID: string) => {
+  return ImapConfig.findOne({ userID });
+};
+
+export { saveImapConfig, getConfigByUserID };

@@ -24,7 +24,7 @@ const addRule = (
   return rule;
 };
 
-const getByID = (id: string) => {
+const getRuleByID = (id: string) => {
   return Rule.findById(id);
 };
 
@@ -34,4 +34,4 @@ const getUserRules = (userID: string) => {
   });
 };
 
-export { addRule, getByID, getUserRules };
+export { addRule, getRuleByID, getUserRules };
