@@ -5,3 +5,4 @@ interface IImapConfig {
   host: string;
   port: number;
 }
+export { IImapConfig };

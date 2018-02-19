@@ -9,6 +9,7 @@ import { getUserRules } from "./../../services/RuleService";
 import { IUserModel } from "./../../models/users/User";
 import { UserType } from "./userType";
 import { getUserByID } from "../../services/UserService";
+import { IImapConfig } from "../../models/users/IImapConfig";
 
 const ImapConfigType = new GraphQLObjectType({
   name: "ImapConfigType",

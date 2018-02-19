@@ -1,5 +1,6 @@
 import * as bcrypt from "bcrypt-nodejs";
 import { Error, Schema, Document, model } from "mongoose";
+import { IImapConfig } from "./IImapConfig";
 
 interface IImapConfigModel extends IImapConfig, Document {}
 

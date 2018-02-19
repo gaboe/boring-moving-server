@@ -1,5 +1,6 @@
 import { ImapConfig } from "../models/users/ImapConfig";
 import { Request } from "express";
+import { IImapConfig } from "../models/users/IImapConfig";
 
 const saveImapConfig = async (
   userName: string,

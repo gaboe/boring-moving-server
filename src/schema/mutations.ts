@@ -13,6 +13,7 @@ import { NonAuthenificatedUser } from "../models/users/NonAuthentificatedUser";
 import { logInfo } from "../services/LogService";
 import { ImapConfigType } from "./types/imapConfigType";
 import { saveImapConfig } from "../services/ImapConfigService";
+import { IImapConfig } from "../models/users/IImapConfig";
 
 const mutation = new GraphQLObjectType({
   name: "Mutation",
