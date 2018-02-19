@@ -1,14 +1,12 @@
 import * as Imap from "imap";
 import { IUser } from "../../models/users/IUser";
-import { createSearchCriteria } from "./searchCriteriaProvider";
 import { IRule } from "../../models/rules/IRule";
-import { IImapConfig } from "../../models/users/IImapConfig";
 import { inspect } from "util";
 import * as moment from "moment";
-import { log } from "../logService";
 import { IRuleModel } from "../../models/rules/Rule";
 import { SearchCriterias } from "./SearchCriteria";
-
+import { createSearchCriteria } from "./SearchCriteriaProvider";
+import { log } from "./../LogService";
 const createConfig = ({ imapConfig }: IUser): Imap.Config => {
   const config: Imap.Config = {
     user: imapConfig.userName,
@@ -35,13 +33,12 @@ const processEmails = (config: Imap.Config, rule: IRuleModel) => {
   const imap: Imap = new Imap(config);
 
   imap.once("ready", function() {
-    // tslint:disable-next-line:no-invalid-this
     openInbox(this, function(err, box) {
-      // tslint:disable-next-line:no-shadowed-variable
       imap.search(searchCriteria as any[], async (err, uids) => {
         console.log("uids:", uids);
         if (uids.length === 0) {
           imap.end();
+          log("No valid mails discovered", "success", null, rule.id);
           return;
         }
         const validUIDs = Array<string>();
@@ -53,11 +50,15 @@ const processEmails = (config: Imap.Config, rule: IRuleModel) => {
             }
           });
         });
-        // tslint:disable-next-line:no-shadowed-variable
         f.once("error", function(err) {
           log("Fetch error", "error", null, rule.id, err);
         });
         f.once("end", function() {
+          if (validUIDs.length === 0) {
+            imap.end();
+            log("No valid mails discovered", "success", null, rule.id);
+            return;
+          }
           log("Moving emails", "info", null, rule.id, {
             validUIDs,
             boxname: rule.folderName

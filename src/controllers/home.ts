@@ -14,8 +14,7 @@ export let index = (req: Request, res: Response) => {
 export const startJob = (req: Request, res: Response) => {
   res.render("job");
   executeJob();
-  setInterval(async () => {
+  setTimeout(async () => {
     await logSync("Job exited", "success");
-    process.exit();
   }, 10000);
 };
