@@ -29,8 +29,18 @@ const configExists = async (userID: string): Promise<boolean> => {
   return config.length > 0;
 };
 
+const nameof = <T>(key: keyof T, instance?: T): keyof T => key;
+
 const getConfigByUserID = (userID: string) => {
   return ImapConfig.findOne({ userID });
 };
 
-export { saveImapConfig, getConfigByUserID };
+const getFilledImapConfigByUserID = (userID: string) => {
+  return ImapConfig.findOne({ userID })
+    .where(nameof<IImapConfig>("userName"), { $ne: null })
+    .where(nameof<IImapConfig>("password"), { $ne: null })
+    .where(nameof<IImapConfig>("host"), { $ne: null })
+    .where(nameof<IImapConfig>("port"), { $ne: null });
+};
+
+export { getFilledImapConfigByUserID, saveImapConfig, getConfigByUserID };

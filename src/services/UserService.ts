@@ -9,4 +9,8 @@ const userExists = async (googleID: string): Promise<boolean> => {
   return u.length > 0;
 };
 
-export { getUserByID, userExists, getUserByGoogleID };
+const getAllUsers = async () => {
+  return User.find().cursor();
+};
+
+export { getAllUsers, getUserByID, userExists, getUserByGoogleID };

@@ -20,6 +20,7 @@ import * as passportConfig from "./config/passport";
 import * as expressGraphQL from "express-graphql";
 import schema from "./schema/schema";
 import * as cors from "cors";
+import { executeJob } from "./jobs/job";
 
 const MongoStore = mongo(session);
 (<any>mongoose).Promise = global.Promise;
@@ -96,7 +97,7 @@ app.use((req, res, next) => {
  * Primary app routes.
  */
 app.get("/", homeController.index);
-
+app.get("/job", homeController.startJob);
 app.use(
   "/graphql",
   expressGraphQL({
