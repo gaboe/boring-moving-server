@@ -77,7 +77,7 @@ const processEmails = (config: Imap.Config, rule: IRuleModel) => {
   });
 
   imap.once("error", function(err) {
-    log("Connection error", "error", null, rule.id, err);
+    log("Connection error", "error", null, rule.id, { err, config });
   });
 
   imap.once("end", function() {
