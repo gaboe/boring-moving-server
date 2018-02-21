@@ -1,5 +1,4 @@
 import { User, IUserModel } from "./../models/users/User";
-import { IUser } from "./../models/users/IUser";
 import { Request } from "express";
 import { Error } from "mongoose";
 import { IAuth } from "./../models/auth/IAuth";

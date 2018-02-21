@@ -9,7 +9,7 @@ import { getUserRules } from "./../../services/RuleService";
 import { IUserModel } from "./../../models/users/User";
 import { UserType } from "./userType";
 import { getUserByID } from "../../services/UserService";
-import { IImapConfig } from "../../models/users/IImapConfig";
+import { IImapConfigModel } from "../../models/users/ImapConfig";
 
 const ImapConfigType = new GraphQLObjectType({
   name: "ImapConfigType",
@@ -22,7 +22,7 @@ const ImapConfigType = new GraphQLObjectType({
     port: { type: GraphQLString },
     user: {
       type: UserType,
-      resolve(parentValue: IImapConfig) {
+      resolve(parentValue: IImapConfigModel) {
         return getUserByID(parentValue.userID);
       }
     }

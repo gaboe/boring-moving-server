@@ -1,9 +1,22 @@
 import * as bcrypt from "bcrypt-nodejs";
 import * as crypto from "crypto";
 import { Error, Schema, Document, model } from "mongoose";
-import { Rule } from "./../rules/Rule";
+import { Rule, IRuleModel } from "./../rules/Rule";
 import { ObjectId } from "bson";
-import { IUser } from "./IUser";
+import { IAuth } from "../auth/IAuth";
+import { NonAuthenificatedUser } from "./NonAuthentificatedUser";
+import { IImapConfigModel } from "./ImapConfig";
+
+interface IUser extends IAuth, NonAuthenificatedUser {
+  password: string;
+
+  rules: IRuleModel[];
+  imapConfig: IImapConfigModel;
+  comparePassword(
+    password: string,
+    callback: (err: Error, isMatch: boolean) => void
+  ): boolean;
+}
 
 interface IUserModel extends IUser, Document {}
 

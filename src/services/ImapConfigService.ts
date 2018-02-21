@@ -1,6 +1,5 @@
-import { ImapConfig } from "../models/users/ImapConfig";
+import { ImapConfig, IImapConfig } from "../models/users/ImapConfig";
 import { Request } from "express";
-import { IImapConfig } from "../models/users/IImapConfig";
 
 const saveImapConfig = async (
   userName: string,
@@ -9,13 +8,14 @@ const saveImapConfig = async (
   port: number,
   req: Request
 ) => {
-  const config: IImapConfig = {
+  const config = new ImapConfig({
     host,
     password,
     port,
     userName,
     userID: req.user.id
-  };
+  });
+
   if (await configExists(req.user.id)) {
     await ImapConfig.update({ userID: req.user.id }, config);
     return ImapConfig.findOne({ userID: req.user.id });

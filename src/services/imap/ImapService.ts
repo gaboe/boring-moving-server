@@ -1,13 +1,13 @@
 import * as Imap from "imap";
-import { IUser } from "../../models/users/IUser";
-import { IRule } from "../../models/rules/IRule";
 import { inspect } from "util";
 import * as moment from "moment";
 import { IRuleModel } from "../../models/rules/Rule";
 import { SearchCriterias } from "./SearchCriteria";
 import { createSearchCriteria } from "./SearchCriteriaProvider";
 import { log } from "./../LogService";
-const createConfig = ({ imapConfig }: IUser): Imap.Config => {
+import { IUserModel } from "../../models/users/User";
+
+const createConfig = ({ imapConfig }: IUserModel): Imap.Config => {
   const config: Imap.Config = {
     user: imapConfig.userName,
     password: imapConfig.password,

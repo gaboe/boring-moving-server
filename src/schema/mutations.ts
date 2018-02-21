@@ -13,7 +13,7 @@ import { NonAuthenificatedUser } from "../models/users/NonAuthentificatedUser";
 import { logInfo } from "../services/LogService";
 import { ImapConfigType } from "./types/imapConfigType";
 import { saveImapConfig } from "../services/ImapConfigService";
-import { IImapConfig } from "../models/users/IImapConfig";
+import { IImapConfigModel } from "../models/users/ImapConfig";
 
 const mutation = new GraphQLObjectType({
   name: "Mutation",
@@ -86,7 +86,7 @@ const mutation = new GraphQLObjectType({
       },
       resolve(
         _,
-        { userName, password, host, port }: IImapConfig,
+        { userName, password, host, port }: IImapConfigModel,
         req: Request
       ) {
         return saveImapConfig(userName, password, host, port, req);
