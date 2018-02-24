@@ -2,7 +2,8 @@ import {
   GraphQLObjectType,
   GraphQLString,
   GraphQLID,
-  GraphQLList
+  GraphQLList,
+  GraphQLNonNull
 } from "graphql";
 import { RuleType } from "./ruleType";
 import { getUserRules } from "./../../services/RuleService";
@@ -14,14 +15,14 @@ import { IImapConfigModel } from "../../models/users/ImapConfig";
 const ImapConfigType = new GraphQLObjectType({
   name: "ImapConfigType",
   fields: {
-    id: { type: GraphQLID },
-    userID: { type: GraphQLID },
-    userName: { type: GraphQLString },
-    password: { type: GraphQLString },
-    host: { type: GraphQLString },
-    port: { type: GraphQLString },
+    id: { type: new GraphQLNonNull(GraphQLID) },
+    userID: { type: new GraphQLNonNull(GraphQLID) },
+    userName: { type: new GraphQLNonNull(GraphQLString) },
+    password: { type: new GraphQLNonNull(GraphQLString) },
+    host: { type: new GraphQLNonNull(GraphQLString) },
+    port: { type: new GraphQLNonNull(GraphQLString) },
     user: {
-      type: UserType,
+      type: new GraphQLNonNull(UserType),
       resolve(parentValue: IImapConfigModel) {
         return getUserByID(parentValue.userID);
       }

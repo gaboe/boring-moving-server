@@ -1,4 +1,9 @@
-import { GraphQLObjectType, GraphQLString, GraphQLID } from "graphql";
+import {
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLID,
+  GraphQLNonNull
+} from "graphql";
 
 import { UserType } from "./types/userType";
 import * as AuthService from "./../services/auth";
@@ -21,10 +26,10 @@ const mutation = new GraphQLObjectType({
     authentificate: {
       type: UserType,
       args: {
-        googleID: { type: GraphQLString },
-        email: { type: GraphQLString },
-        firstName: { type: GraphQLString },
-        lastName: { type: GraphQLString }
+        googleID: { type: new GraphQLNonNull(GraphQLString) },
+        email: { type: new GraphQLNonNull(GraphQLString) },
+        firstName: { type: new GraphQLNonNull(GraphQLString) },
+        lastName: { type: new GraphQLNonNull(GraphQLString) }
       },
       resolve(_, user: NonAuthenificatedUser, req: Request) {
         logInfo("authentificate mutation", { user }, req.user);
@@ -34,8 +39,8 @@ const mutation = new GraphQLObjectType({
     signup: {
       type: UserType,
       args: {
-        email: { type: GraphQLString },
-        password: { type: GraphQLString }
+        email: { type: new GraphQLNonNull(GraphQLString) },
+        password: { type: new GraphQLNonNull(GraphQLString) }
       },
       resolve(_, { email, password }: IAuth, req: Request) {
         return AuthService.signup({ email, password }, req);
@@ -52,8 +57,8 @@ const mutation = new GraphQLObjectType({
     login: {
       type: UserType,
       args: {
-        email: { type: GraphQLString },
-        password: { type: GraphQLString }
+        email: { type: new GraphQLNonNull(GraphQLString) },
+        password: { type: new GraphQLNonNull(GraphQLString) }
       },
       resolve(_, { email, password }: IAuth, req: Request) {
         return AuthService.login({ email, password }, req);
@@ -62,11 +67,11 @@ const mutation = new GraphQLObjectType({
     addRule: {
       type: RuleType,
       args: {
-        sender: { type: GraphQLString },
-        subject: { type: GraphQLString },
-        content: { type: GraphQLString },
-        folderName: { type: GraphQLString },
-        period: { type: GraphQLInt }
+        sender: { type: new GraphQLNonNull(GraphQLString) },
+        subject: { type: new GraphQLNonNull(GraphQLString) },
+        content: { type: new GraphQLNonNull(GraphQLString) },
+        folderName: { type: new GraphQLNonNull(GraphQLString) },
+        period: { type: new GraphQLNonNull(GraphQLInt) }
       },
       resolve(
         _,
@@ -79,10 +84,10 @@ const mutation = new GraphQLObjectType({
     saveImapConfig: {
       type: ImapConfigType,
       args: {
-        userName: { type: GraphQLString },
-        password: { type: GraphQLString },
-        host: { type: GraphQLString },
-        port: { type: GraphQLInt }
+        userName: { type: new GraphQLNonNull(GraphQLString) },
+        password: { type: new GraphQLNonNull(GraphQLString) },
+        host: { type: new GraphQLNonNull(GraphQLString) },
+        port: { type: new GraphQLNonNull(GraphQLInt) }
       },
       resolve(
         _,

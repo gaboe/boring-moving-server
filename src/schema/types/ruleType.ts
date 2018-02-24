@@ -2,7 +2,8 @@ import {
   GraphQLObjectType,
   GraphQLString,
   GraphQLID,
-  GraphQLList
+  GraphQLList,
+  GraphQLNonNull
 } from "graphql";
 
 import { UserType } from "./userType";
@@ -12,15 +13,15 @@ import { GraphQLInt } from "graphql/type/scalars";
 const RuleType = new GraphQLObjectType({
   name: "RuleType",
   fields: () => ({
-    id: { type: GraphQLID },
-    sender: { type: GraphQLString },
-    subject: { type: GraphQLString },
-    content: { type: GraphQLString },
-    folderName: { type: GraphQLString },
-    period: { type: GraphQLInt },
-    userID: { type: GraphQLID },
+    id: { type: new GraphQLNonNull(GraphQLID) },
+    sender: { type: new GraphQLNonNull(GraphQLString) },
+    subject: { type: new GraphQLNonNull(GraphQLString) },
+    content: { type: new GraphQLNonNull(GraphQLString) },
+    folderName: { type: new GraphQLNonNull(GraphQLString) },
+    period: { type: new GraphQLNonNull(GraphQLInt) },
+    userID: { type: new GraphQLNonNull(GraphQLID) },
     user: {
-      type: UserType,
+      type: new GraphQLNonNull(UserType),
       resolve(parentValue: IRuleModel) {
         return getUserByID(parentValue.userID);
       }
