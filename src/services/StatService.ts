@@ -3,11 +3,13 @@ import { IJobRun, JobRun, IJobRunModel } from "../models/stat/JobRun";
 import { nameof } from "../utils/Reflection";
 import { IStatModel, IStat, Stat } from "../models/stat/Stat";
 const createJobRun = async (name: JobRunName): Promise<IJobRunModel> => {
-  const jobRun = new JobRun({
-    name: name,
+  const _jobRun: IJobRun = {
+    name,
     dateFinished: null,
+    dateStarted: null,
     iteration: await getLastIteration(name)
-  });
+  };
+  const jobRun = new JobRun(_jobRun);
   jobRun.save();
   return jobRun;
 };
