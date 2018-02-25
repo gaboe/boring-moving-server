@@ -82,7 +82,7 @@ const mutation = new GraphQLObjectType({
       }
     },
     saveImapConfig: {
-      type: ImapConfigType,
+      type: new GraphQLNonNull(ImapConfigType),
       args: {
         userName: { type: new GraphQLNonNull(GraphQLString) },
         password: { type: new GraphQLNonNull(GraphQLString) },

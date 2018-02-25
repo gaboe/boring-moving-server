@@ -18,7 +18,7 @@ const UserType = new GraphQLObjectType({
     lastName: { type: new GraphQLNonNull(GraphQLString) },
     googleID: { type: new GraphQLNonNull(GraphQLString) },
     rules: {
-      type: new GraphQLList(RuleType),
+      type: new GraphQLList(new GraphQLNonNull(RuleType)),
       resolve(parentValue: IUserModel) {
         return getUserRules(parentValue.id);
       }
