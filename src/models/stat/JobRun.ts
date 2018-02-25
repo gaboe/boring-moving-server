@@ -23,4 +23,4 @@ const schema = new Schema(
 
 const JobRun = model<IJobRunModel>("JobRun", schema);
 
-export { IJobRun };
+export { IJobRun, JobRun, IJobRunModel };

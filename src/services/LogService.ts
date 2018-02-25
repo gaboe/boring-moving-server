@@ -1,6 +1,6 @@
 import { Log, LogLevel } from "../models/logs/Log";
 import { LogName, AppLogName } from "../models/logs/LogName";
-import { MailLog } from "../models/logs/MailLog";
+import { MailLog, IMailLogModel } from "../models/logs/MailLog";
 const CircularJSON = require("circular-json");
 
 const logInfo = (name: AppLogName, content: any, userID?: string) => {
@@ -38,6 +38,10 @@ const log = (
   );
 };
 
+const getLastMailLog = async (): Promise<IMailLogModel> => {
+  return await MailLog.findOne().sort({ dateCreated: "desc" });
+};
+
 const logSync = async (
   name: LogName,
   logLevel: LogLevel,
@@ -58,4 +62,4 @@ const logSync = async (
   );
 };
 
-export { logInfo, log, logSync };
+export { logInfo, log, logSync, getLastMailLog };
