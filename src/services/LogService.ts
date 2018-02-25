@@ -1,9 +1,9 @@
 import { Log, LogLevel } from "../models/logs/Log";
-import { LogName } from "../models/logs/LogName";
+import { LogName, AppLogName } from "../models/logs/LogName";
 import { MailLog } from "../models/logs/MailLog";
 const CircularJSON = require("circular-json");
 
-const logInfo = (name: string, content: any, userID?: string) => {
+const logInfo = (name: AppLogName, content: any, userID?: string) => {
   const logLevel: LogLevel = "info";
   const log = new Log({
     name,
@@ -12,6 +12,11 @@ const logInfo = (name: string, content: any, userID?: string) => {
     logLevel
   });
   log.save();
+  console.log(
+    `Log name: ${name}, Log level: ${logLevel} --userID: ${userID} \nContent: ${
+      log.content
+    }`
+  );
 };
 const log = (
   name: LogName,

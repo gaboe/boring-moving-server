@@ -1,6 +1,7 @@
 import { User, IUserModel } from "./../models/users/User";
-import { Rule } from "./../models/rules/Rule";
+import { Rule, IRuleModel } from "./../models/rules/Rule";
 import { Request } from "express";
+import { log, logInfo } from "./LogService";
 
 const addRule = (
   sender: string,
@@ -34,4 +35,10 @@ const getUserRules = (userID: string) => {
   });
 };
 
-export { addRule, getRuleByID, getUserRules };
+const deleteRule = async (ruleID: string, userID: string) => {
+  const rule = await Rule.findByIdAndRemove(ruleID);
+  logInfo("Rule deleted", { ruleID: ruleID, rule }, userID);
+  return rule;
+};
+
+export { addRule, getRuleByID, getUserRules, deleteRule };

@@ -8,7 +8,7 @@ import {
 import { UserType } from "./types/userType";
 import * as AuthService from "./../services/auth";
 import { RuleType } from "./../schema/types/ruleType";
-import { addRule } from "./../services/RuleService";
+import { addRule, deleteRule } from "./../services/RuleService";
 import { IUserModel } from "./../models/users/User";
 import { Request } from "express";
 import { IAuth } from "./../models/auth/IAuth";
@@ -32,7 +32,7 @@ const mutation = new GraphQLObjectType({
         lastName: { type: new GraphQLNonNull(GraphQLString) }
       },
       resolve(_, user: NonAuthenificatedUser, req: Request) {
-        logInfo("authentificate mutation", { user }, req.user);
+        logInfo("Authentificate mutation", { user }, req.user);
         return AuthService.authentificate(user, req);
       }
     },
@@ -79,6 +79,18 @@ const mutation = new GraphQLObjectType({
         req: Request
       ) {
         return addRule(sender, subject, content, folderName, period, req);
+      }
+    },
+    deleteRule: {
+      type: RuleType,
+      args: {
+        id: {
+          type: new GraphQLNonNull(GraphQLString),
+          description: "Id of rule, which will be deleted"
+        }
+      },
+      async resolve(_, { id }: { id: string }, req: Request) {
+        return await deleteRule(id, req.user.id);
       }
     },
     saveImapConfig: {
