@@ -6,6 +6,8 @@ import { SearchCriterias } from "./SearchCriteria";
 import { createSearchCriteria } from "./SearchCriteriaProvider";
 import { log } from "./../LogService";
 import { IUserModel } from "../../models/users/User";
+import { insertMovedEmailsStat } from "../StatService";
+import { IJobRunModel } from "../../models/stat/JobRun";
 
 const createConfig = ({ imapConfig }: IUserModel): Imap.Config => {
   const config: Imap.Config = {
@@ -27,7 +29,11 @@ const isAfter = (period: number, emailDate: string) => {
   c.add(-period, "minutes");
   return c.isAfter(moment(emailDate));
 };
-const processEmails = (config: Imap.Config, rule: IRuleModel) => {
+const processEmails = (
+  config: Imap.Config,
+  rule: IRuleModel,
+  jobRun: IJobRunModel
+) => {
   const searchCriteria: SearchCriterias = createSearchCriteria(rule);
   log("SearchCriterias created", "info", null, rule.id, searchCriteria);
   const imap: Imap = new Imap(config);
@@ -66,10 +72,10 @@ const processEmails = (config: Imap.Config, rule: IRuleModel) => {
           imap.openBox(rule.folderName, (openBoxError, mailbox) => {
             if (openBoxError) {
               imap.addBox(rule.folderName, createBoxError => {
-                moveEmails(imap, mailbox, validUIDs, rule);
+                moveEmails(imap, mailbox, validUIDs, rule, jobRun);
               });
             }
-            moveEmails(imap, mailbox, validUIDs, rule);
+            moveEmails(imap, mailbox, validUIDs, rule, jobRun);
           });
         });
       });
@@ -90,7 +96,8 @@ function moveEmails(
   imap: Imap,
   mailbox: Imap.Box,
   uids: string[],
-  rule: IRuleModel
+  rule: IRuleModel,
+  jobRun: IJobRunModel
 ) {
   openInbox(imap, () => {
     const { folderName } = rule;
@@ -103,6 +110,7 @@ function moveEmails(
         folderName,
         uids
       });
+      insertMovedEmailsStat(jobRun.id, rule.userID, rule.id, uids.length);
     });
   });
 }

@@ -1,6 +1,7 @@
 import { JobRunName } from "../models/stat/JobRunName";
 import { IJobRun, JobRun, IJobRunModel } from "../models/stat/JobRun";
 import { nameof } from "../utils/Reflection";
+import { IStatModel, IStat, Stat } from "../models/stat/Stat";
 const createJobRun = async (name: JobRunName): Promise<IJobRunModel> => {
   const jobRun = new JobRun({
     name: name,
@@ -27,4 +28,22 @@ const setCurrentJobAsFinished = async (jobRunID: string) => {
   );
 };
 
-export { createJobRun, setCurrentJobAsFinished };
+const insertMovedEmailsStat = async (
+  jobRunID: string,
+  userID: string,
+  ruleID: string,
+  count: number
+) => {
+  const _stat: IStat = {
+    userID,
+    dateCreated: "",
+    ruleID,
+    movedEmailsCount: count,
+    jobRunID
+  };
+  const stat = new Stat(_stat);
+  stat.save();
+  return stat;
+};
+
+export { createJobRun, setCurrentJobAsFinished, insertMovedEmailsStat };

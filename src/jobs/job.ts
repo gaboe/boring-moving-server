@@ -21,7 +21,7 @@ const executeJob = async () => {
     const imapConfig = await getFilledImapConfigByUserID(user.id);
     if (imapConfig) {
       user.imapConfig = imapConfig;
-      processUser(user);
+      processUser(user, jobRun);
     }
   });
 };
@@ -45,14 +45,14 @@ const wasLastEmailLogLateEnought = async (timeOutSeconds: number) => {
   return timeOutSeconds < duration;
 };
 
-const processUser = (user: IUserModel) => {
+const processUser = (user: IUserModel, jobRun: IJobRunModel) => {
   log("Processing user", "info", user.id, null, user.email);
   const config = createConfig(user);
   const rules = getUserRules(user.id)
     .cursor()
     .eachAsync(rule => {
       log("Processing rule", "info", user.id, rule.id, rule);
-      processEmails(config, rule);
+      processEmails(config, rule, jobRun);
     });
 };
 

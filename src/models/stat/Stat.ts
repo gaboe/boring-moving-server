@@ -23,4 +23,4 @@ const schema = new Schema(
 
 const Stat = model<IStatModel>("Stat", schema);
 
-export { Stat, IStatModel };
+export { Stat, IStatModel, IStat };
