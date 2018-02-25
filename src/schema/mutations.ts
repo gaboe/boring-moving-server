@@ -68,8 +68,8 @@ const mutation = new GraphQLObjectType({
       type: RuleType,
       args: {
         sender: { type: new GraphQLNonNull(GraphQLString) },
-        subject: { type: new GraphQLNonNull(GraphQLString) },
-        content: { type: new GraphQLNonNull(GraphQLString) },
+        subject: { type: GraphQLString },
+        content: { type: GraphQLString },
         folderName: { type: new GraphQLNonNull(GraphQLString) },
         period: { type: new GraphQLNonNull(GraphQLInt) }
       },

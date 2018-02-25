@@ -15,8 +15,8 @@ const RuleType = new GraphQLObjectType({
   fields: () => ({
     id: { type: new GraphQLNonNull(GraphQLID) },
     sender: { type: new GraphQLNonNull(GraphQLString) },
-    subject: { type: new GraphQLNonNull(GraphQLString) },
-    content: { type: new GraphQLNonNull(GraphQLString) },
+    subject: { type: GraphQLString },
+    content: { type: GraphQLString },
     folderName: { type: new GraphQLNonNull(GraphQLString) },
     period: { type: new GraphQLNonNull(GraphQLInt) },
     userID: { type: new GraphQLNonNull(GraphQLID) },
