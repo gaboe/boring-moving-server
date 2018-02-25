@@ -66,10 +66,10 @@ const processEmails = (config: Imap.Config, rule: IRuleModel) => {
           imap.openBox(rule.folderName, (openBoxError, mailbox) => {
             if (openBoxError) {
               imap.addBox(rule.folderName, createBoxError => {
-                moveEmails(imap, mailbox, validUIDs, rule.folderName, rule.id);
+                moveEmails(imap, mailbox, validUIDs, rule);
               });
             }
-            moveEmails(imap, mailbox, validUIDs, rule.folderName, rule.id);
+            moveEmails(imap, mailbox, validUIDs, rule);
           });
         });
       });
@@ -90,16 +90,19 @@ function moveEmails(
   imap: Imap,
   mailbox: Imap.Box,
   uids: string[],
-  box: string,
-  ruleID: string
+  rule: IRuleModel
 ) {
   openInbox(imap, () => {
-    imap.move(uids, box, moveError => {
+    const { folderName } = rule;
+    imap.move(uids, folderName, moveError => {
       if (moveError) {
-        log("Move error", "info", null, ruleID, { box, uids });
+        log("Move error", "info", rule.userID, rule.id, { folderName, uids });
       }
       imap.end();
-      log("Emails moved", "success", null, ruleID, { box, uids });
+      log("Emails moved", "success", rule.userID, rule.id, {
+        folderName,
+        uids
+      });
     });
   });
 }
