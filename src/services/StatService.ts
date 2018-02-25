@@ -48,4 +48,13 @@ const insertMovedEmailsStat = async (
   return stat;
 };
 
-export { createJobRun, setCurrentJobAsFinished, insertMovedEmailsStat };
+const getJobRunByID = async (jobRunID: string) => {
+  return await JobRun.findById(jobRunID);
+};
+
+export {
+  getJobRunByID,
+  createJobRun,
+  setCurrentJobAsFinished,
+  insertMovedEmailsStat
+};
