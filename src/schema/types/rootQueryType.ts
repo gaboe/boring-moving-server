@@ -7,6 +7,8 @@ import { IRuleModel } from "./../../models/rules/Rule";
 import { ImapConfigType } from "./imapConfigType";
 import { getConfigByUserID } from "../../services/ImapConfigService";
 import { getMostActiveRules } from "../../services/StatService";
+import { MetaStatType } from "./MetaStatType";
+import { GraphQLInt } from "graphql";
 
 const { GraphQLObjectType, GraphQLID, GraphQLNonNull, GraphQLList } = graphql;
 
@@ -33,8 +35,10 @@ const RootQueryType = new GraphQLObjectType({
       }
     },
     mostActiveRules: {
-      type: new GraphQLList(RuleType),
-      args: { count: { type: new GraphQLNonNull(GraphQLID) } },
+      type: new GraphQLNonNull(
+        new GraphQLList(new GraphQLNonNull(MetaStatType))
+      ),
+      args: { count: { type: new GraphQLNonNull(GraphQLInt) } },
       resolve(_, { count }: { count: number }, req: Request) {
         return getMostActiveRules(req.user.id, count);
       }

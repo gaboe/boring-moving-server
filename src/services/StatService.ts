@@ -3,6 +3,9 @@ import { IJobRun, JobRun, IJobRunModel } from "../models/stat/JobRun";
 import { nameof } from "../utils/Reflection";
 import { IStatModel, IStat, Stat } from "../models/stat/Stat";
 import * as R from "ramda";
+import { IMetaStat } from "../models/stat/MetaStat";
+import { getUserByID } from "./UserService";
+import { getRuleByID } from "../models/rules/Rule";
 
 const createJobRun = async (name: JobRunName): Promise<IJobRunModel> => {
   const _jobRun: IJobRun = {
@@ -54,19 +57,25 @@ const getJobRunByID = async (jobRunID: string) => {
   return await JobRun.findById(jobRunID);
 };
 
+// TODO try refactor this using rxjs
 const getMostActiveRules = async (userID: string, count: number) => {
   const userStats = await Stat.find({ userID });
   const grouped = R.groupBy(x => x.ruleID, userStats);
+
   const calculated: { ruleID: string; count: number } = R.map(x => {
     return x.map(e => e.movedEmailsCount).reduce((a, b) => a + b);
   }, grouped);
+
   const arrayOfCalculated = Object.entries(calculated).map(x => {
-    const ruleID = x[0];
-    const count = x[1];
-    return { ruleID, count };
+    const metaStat: IMetaStat = {
+      userID: userID,
+      ruleID: x[0],
+      count: Number(x[1])
+    };
+    return metaStat;
   });
-  const taken = R.take(count, arrayOfCalculated);
-  console.log(taken);
+
+  return R.take(count, arrayOfCalculated);
 };
 
 export {
