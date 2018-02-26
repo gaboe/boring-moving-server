@@ -15,12 +15,11 @@ import * as path from "path";
 import * as mongoose from "mongoose";
 import * as passport from "passport";
 import expressValidator = require("express-validator");
-import * as homeController from "./controllers/home";
-import * as passportConfig from "./config/passport";
+import * as homeController from "./controllers/Home";
+import * as passportConfig from "./config/Passport";
 import * as expressGraphQL from "express-graphql";
-import schema from "./schema/schema";
+import schema from "./schema/Schema";
 import * as cors from "cors";
-import { executeJob } from "./jobs/job";
 
 const MongoStore = mongo(session);
 (<any>mongoose).Promise = global.Promise;

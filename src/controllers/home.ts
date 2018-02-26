@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { executeJob } from "../jobs/job";
+import { executeJob } from "../jobs/Job";
 /**
  * GET /
  * Home page.

@@ -1,10 +1,10 @@
 import * as graphql from "graphql";
 import { getRuleByID } from "./../../services/RuleService";
-import { UserType } from "./userType";
-import { RuleType } from "./ruleType";
+import { UserType } from "./UserType";
+import { RuleType } from "./RuleType";
 import { Request } from "express";
 import { IRuleModel } from "./../../models/rules/Rule";
-import { ImapConfigType } from "./imapConfigType";
+import { ImapConfigType } from "./ImapConfigType";
 import { getConfigByUserID } from "../../services/ImapConfigService";
 import { getMostActiveRules } from "../../services/StatService";
 import { MetaStatType } from "./MetaStatType";

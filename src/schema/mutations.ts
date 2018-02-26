@@ -5,9 +5,9 @@ import {
   GraphQLNonNull
 } from "graphql";
 
-import { UserType } from "./types/userType";
-import * as AuthService from "./../services/auth";
-import { RuleType } from "./../schema/types/ruleType";
+import { UserType } from "./types/UserType";
+import * as AuthService from "./../services/Auth";
+import { RuleType } from "./../schema/types/RuleType";
 import { addRule, deleteRule } from "./../services/RuleService";
 import { IUserModel } from "./../models/users/User";
 import { Request } from "express";
@@ -16,7 +16,7 @@ import { IRuleModel } from "./../models/rules/Rule";
 import { GraphQLInt } from "graphql/type/scalars";
 import { NonAuthenificatedUser } from "../models/users/NonAuthentificatedUser";
 import { logInfo } from "../services/LogService";
-import { ImapConfigType } from "./types/imapConfigType";
+import { ImapConfigType } from "./types/ImapConfigType";
 import { saveImapConfig } from "../services/ImapConfigService";
 import { IImapConfigModel } from "../models/users/ImapConfig";
 

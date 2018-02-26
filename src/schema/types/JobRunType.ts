@@ -6,10 +6,10 @@ import {
   GraphQLNonNull,
   GraphQLInt
 } from "graphql";
-import { UserType } from "./userType";
+import { UserType } from "./UserType";
 import { IStat } from "../../models/stat/Stat";
 import { getUserByID } from "../../services/UserService";
-import { RuleType } from "./ruleType";
+import { RuleType } from "./RuleType";
 
 const JobRunType = new GraphQLObjectType({
   name: "JobRunType",

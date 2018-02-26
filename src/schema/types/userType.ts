@@ -5,7 +5,7 @@ import {
   GraphQLList,
   GraphQLNonNull
 } from "graphql";
-import { RuleType } from "./ruleType";
+import { RuleType } from "./RuleType";
 import { getUserRules } from "./../../services/RuleService";
 import { IUserModel } from "./../../models/users/User";
 

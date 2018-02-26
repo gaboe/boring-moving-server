@@ -6,7 +6,7 @@ import {
   GraphQLNonNull
 } from "graphql";
 
-import { UserType } from "./userType";
+import { UserType } from "./UserType";
 import { getUserByID } from "./../../services/UserService";
 import { IRuleModel } from "./../../models/rules/Rule";
 import { GraphQLInt } from "graphql/type/scalars";
