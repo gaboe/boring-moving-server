@@ -6,8 +6,10 @@ import { Request } from "express";
 import { IRuleModel } from "./../../models/rules/Rule";
 import { ImapConfigType } from "./imapConfigType";
 import { getConfigByUserID } from "../../services/ImapConfigService";
+import { getMostActiveRules } from "../../services/StatService";
 
-const { GraphQLObjectType, GraphQLID, GraphQLNonNull } = graphql;
+const { GraphQLObjectType, GraphQLID, GraphQLNonNull, GraphQLList } = graphql;
+
 const RootQueryType = new GraphQLObjectType({
   name: "RootQueryType",
   fields: {
@@ -28,6 +30,13 @@ const RootQueryType = new GraphQLObjectType({
       type: ImapConfigType,
       resolve(_, __, req: Request) {
         return getConfigByUserID(req.user.id);
+      }
+    },
+    mostActiveRules: {
+      type: new GraphQLList(RuleType),
+      args: { count: { type: new GraphQLNonNull(GraphQLID) } },
+      resolve(_, { count }: { count: number }, req: Request) {
+        return getMostActiveRules(req.user.id, count);
       }
     }
   }

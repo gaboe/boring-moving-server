@@ -172,6 +172,10 @@
   dependencies:
     "@types/express" "*"
 
+"@types/ramda@^0.25.18":
+  version "0.25.18"
+  resolved "https://registry.yarnpkg.com/@types/ramda/-/ramda-0.25.18.tgz#a026777d780226a08a50a50a353ce901490f0b92"
+
 "@types/request@2.47.0":
   version "2.47.0"
   resolved "https://registry.yarnpkg.com/@types/request/-/request-2.47.0.tgz#76a666cee4cb85dcffea6cd4645227926d9e114e"
