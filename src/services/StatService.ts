@@ -65,7 +65,6 @@ const getAllMovedEmailsCount = async (userID: string) => {
 
 // TODO try refactor this using rxjs
 const getMostActiveRules = async (userID: string, count: number) => {
-  console.log(userID, count);
   const userStats = await Stat.find({ userID });
   const grouped = R.groupBy(x => x.ruleID, userStats);
 
