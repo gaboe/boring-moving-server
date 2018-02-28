@@ -57,8 +57,15 @@ const getJobRunByID = async (jobRunID: string) => {
   return await JobRun.findById(jobRunID);
 };
 
+const getAllMovedEmailsCount = async (userID: string) => {
+  const userStats = await Stat.find({ userID });
+  const count = userStats.map(x => x.movedEmailsCount).reduce((a, b) => a + b);
+  return count;
+};
+
 // TODO try refactor this using rxjs
 const getMostActiveRules = async (userID: string, count: number) => {
+  console.log(userID, count);
   const userStats = await Stat.find({ userID });
   const grouped = R.groupBy(x => x.ruleID, userStats);
 
@@ -67,7 +74,7 @@ const getMostActiveRules = async (userID: string, count: number) => {
   }, grouped);
 
   const arrayOfCalculated = Object.entries(calculated).map(x => {
-    const metaStat: IMetaStat = {
+    const metaStat: IRuleStat = {
       userID: userID,
       ruleID: x[0],
       count: Number(x[1])
@@ -75,7 +82,7 @@ const getMostActiveRules = async (userID: string, count: number) => {
     return metaStat;
   });
 
-  return R.take(count, arrayOfCalculated);
+  return R.sortBy(x => !x.count, R.take(count, arrayOfCalculated));
 };
 
 export {
@@ -83,5 +90,6 @@ export {
   createJobRun,
   setCurrentJobAsFinished,
   insertMovedEmailsStat,
-  getMostActiveRules
+  getMostActiveRules,
+  getAllMovedEmailsCount
 };
