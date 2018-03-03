@@ -11,6 +11,7 @@ import { RuleStatType } from "./RuleStatType";
 import { GraphQLInt } from "graphql";
 import { IMetaStat } from "../../models/stat/MetaStat";
 import { MetaStatType } from "./MetaStatType";
+import { AppStatType } from "./AppStatType";
 
 const { GraphQLObjectType, GraphQLID, GraphQLNonNull, GraphQLList } = graphql;
 
@@ -45,6 +46,12 @@ const RootQueryType = new GraphQLObjectType({
           takeRulesCount: count
         };
         return metaStat;
+      }
+    },
+    appStat: {
+      type: new GraphQLNonNull(AppStatType),
+      resolve() {
+        return {};
       }
     }
   }

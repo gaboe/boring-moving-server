@@ -6,6 +6,7 @@ import * as R from "ramda";
 import { IMetaStat } from "../models/stat/MetaStat";
 import { getUserByID } from "./UserService";
 import { getRuleByID } from "../models/rules/Rule";
+import { IAppStat } from "../models/stat/AppStat";
 
 const createJobRun = async (name: JobRunName): Promise<IJobRunModel> => {
   const _jobRun: IJobRun = {
@@ -63,6 +64,13 @@ const getAllMovedEmailsCount = async (userID: string) => {
   return count;
 };
 
+const getAllMovedEmailsCountForApplication = async () => {
+  const appStats: IAppStat[] = await Stat.aggregate([
+    { $group: { _id: null, emailCount: { $sum: "$movedEmailsCount" } } }
+  ]);
+  return appStats.map(x => x.emailCount).reduce((a, b) => a + b);
+};
+
 // TODO try refactor this using rxjs
 const getMostActiveRules = async (userID: string, count: number) => {
   const userStats = await Stat.find({ userID });
@@ -90,5 +98,6 @@ export {
   setCurrentJobAsFinished,
   insertMovedEmailsStat,
   getMostActiveRules,
-  getAllMovedEmailsCount
+  getAllMovedEmailsCount,
+  getAllMovedEmailsCountForApplication
 };
