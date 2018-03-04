@@ -12,7 +12,7 @@
     "prod": "yarn build && node ./dist/server.js",
     "dev-watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"yarn watch-ts\" \"yarn serve\"",
     "start": "yarn run build && yarn run watch",
-    "build": "yarn run build-ts && yarn run tslint && yarn run copy-static-assets",
+    "build": "yarn run build-ts && yarn run tslint",
     "serve": "nodemon dist/server.js",
     "watch": "concurrently -k -p \"[{name}]\" -n \"yellow.bold,cyan.bold,green.bold\" \"yarn run watch-ts\" \"yarn run serve\"",
     "test": "jest --forceExit",
@@ -21,7 +21,10 @@
     "tslint": "tslint -c tslint.json -p tsconfig.json",
     "debug": "yarn run build && yarn run watch-debug",
     "serve-debug": "nodemon --inspect dist/server.js",
-    "watch-debug": "concurrently -k -p \"[{name}]\" -n \"yellow.bold,cyan.bold,green.bold\" \"yarn run watch-ts\" \"yarn run serve-debug\""
+    "watch-debug": "concurrently -k -p \"[{name}]\" -n \"yellow.bold,cyan.bold,green.bold\" \"yarn run watch-ts\" \"yarn run serve-debug\"",
+    "docker-build": "docker build --no-cache -t boring-moving-server .",
+    "docker-deploy": "heroku container:push web",
+    "deploy": "yarn docker-build && yarn docker-deploy"
   },
   "jest": {
     "globals": {
