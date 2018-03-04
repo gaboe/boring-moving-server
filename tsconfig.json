@@ -12,6 +12,8 @@
     "moduleResolution": "node",
     "sourceMap": true,
     "outDir": "dist",
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
     "baseUrl": ".",
     "paths": {
       "*": [

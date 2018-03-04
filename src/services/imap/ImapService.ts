@@ -39,7 +39,7 @@ const processEmails = (
   const imap: Imap = new Imap(config);
 
   imap.once("ready", function () {
-    openInbox(this, function (err, box) {
+    openInbox(imap, function (err, box) {
       // imap types are using any, think about sending PR
       // tslint:disable-next-line:no-any
       imap.search(searchCriteria as any[], async (err, uids) => {

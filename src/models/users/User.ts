@@ -7,7 +7,6 @@ import { IImapConfigModel } from "./ImapConfig";
 
 interface IUser extends IAuth, NonAuthenificatedUser {
   password: string;
-
   rules: IRuleModel[];
   imapConfig: IImapConfigModel;
   comparePassword(
@@ -25,25 +24,6 @@ const userSchema = new Schema({
   lastName: String
 });
 
-userSchema.pre("save", function save(next) {
-  const user: IUserModel = this;
-  if (!user.isModified("password")) {
-    return next();
-  }
-  bcrypt.genSalt(10, (err, salt) => {
-    if (err) {
-      return next(err);
-    }
-    bcrypt.hash(user.password, salt, undefined, (err, hash) => {
-      if (err) {
-        return next(err);
-      }
-      user.password = hash;
-      next();
-    });
-  });
-});
-
 userSchema.methods.comparePassword = function (
   candidatePassword: string,
   callback: (err: Error, isMatch: boolean) => void
@@ -57,7 +37,6 @@ userSchema.methods.comparePassword = function (
   );
 };
 
-// export const User: UserType = mongoose.model<UserType>('User', userSchema);
 const User = model<IUserModel>("User", userSchema);
 
 export { User, userSchema, IUserModel };
