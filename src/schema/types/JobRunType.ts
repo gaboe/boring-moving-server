@@ -2,14 +2,9 @@ import {
   GraphQLObjectType,
   GraphQLString,
   GraphQLID,
-  GraphQLList,
   GraphQLNonNull,
   GraphQLInt
 } from "graphql";
-import { UserType } from "./UserType";
-import { IStat } from "../../models/stat/Stat";
-import { getUserByID } from "../../services/UserService";
-import { RuleType } from "./RuleType";
 
 const JobRunType = new GraphQLObjectType({
   name: "JobRunType",

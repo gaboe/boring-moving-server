@@ -1,5 +1,4 @@
 import { append } from "ramda";
-import * as moment from "moment";
 import { SearchCriterias } from "./SearchCriteria";
 import { IRuleModel } from "../../models/rules/Rule";
 

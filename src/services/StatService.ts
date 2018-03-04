@@ -1,11 +1,7 @@
 import { JobRunName } from "../models/stat/JobRunName";
 import { IJobRun, JobRun, IJobRunModel } from "../models/stat/JobRun";
-import { nameof } from "../utils/Reflection";
-import { IStatModel, IStat, Stat } from "../models/stat/Stat";
+import { IStat, Stat } from "../models/stat/Stat";
 import * as R from "ramda";
-import { IMetaStat } from "../models/stat/MetaStat";
-import { getUserByID } from "./UserService";
-import { getRuleByID } from "../models/rules/Rule";
 import { IAppStat } from "../models/stat/AppStat";
 
 const createJobRun = async (name: JobRunName): Promise<IJobRunModel> => {

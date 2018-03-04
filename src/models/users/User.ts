@@ -1,8 +1,6 @@
 import * as bcrypt from "bcrypt-nodejs";
-import * as crypto from "crypto";
-import { Error, Schema, Document, model } from "mongoose";
-import { Rule, IRuleModel } from "./../rules/Rule";
-import { ObjectId } from "bson";
+import { Schema, Document, model } from "mongoose";
+import { IRuleModel } from "./../rules/Rule";
 import { IAuth } from "../auth/IAuth";
 import { NonAuthenificatedUser } from "./NonAuthentificatedUser";
 import { IImapConfigModel } from "./ImapConfig";
@@ -18,7 +16,7 @@ interface IUser extends IAuth, NonAuthenificatedUser {
   ): boolean;
 }
 
-interface IUserModel extends IUser, Document {}
+interface IUserModel extends IUser, Document { }
 
 const userSchema = new Schema({
   googleID: String,
@@ -46,7 +44,7 @@ userSchema.pre("save", function save(next) {
   });
 });
 
-userSchema.methods.comparePassword = function(
+userSchema.methods.comparePassword = function (
   candidatePassword: string,
   callback: (err: Error, isMatch: boolean) => void
 ) {

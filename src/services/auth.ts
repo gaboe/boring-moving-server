@@ -3,9 +3,7 @@ import { Request } from "express";
 import { Error } from "mongoose";
 import { IAuth } from "./../models/auth/IAuth";
 import { NonAuthenificatedUser } from "../models/users/NonAuthentificatedUser";
-import { reject } from "async";
 import { userExists, getUserByGoogleID } from "./UserService";
-const mongoose = require("mongoose");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 
@@ -105,7 +103,7 @@ function login({ email, password }: IAuth, req: Request) {
 // );
 
 passport.use(
-  new LocalStrategy(async function(googleID, _, done) {
+  new LocalStrategy(async function (googleID, _, done) {
     const user = await getUserByGoogleID(googleID);
     return done(null, user);
   })

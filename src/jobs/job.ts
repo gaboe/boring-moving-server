@@ -1,4 +1,4 @@
-import { log, logSync, getLastMailLog } from "../services/LogService";
+import { log, getLastMailLog } from "../services/LogService";
 import { getAllUsers } from "../services/UserService";
 import { getFilledImapConfigByUserID } from "../services/ImapConfigService";
 import { createConfig, processEmails } from "../services/imap/ImapService";
@@ -48,7 +48,7 @@ const wasLastEmailLogLateEnought = async (timeOutSeconds: number) => {
 const processUser = (user: IUserModel, jobRun: IJobRunModel) => {
   log("Processing user", "info", user.id, null, user.email);
   const config = createConfig(user);
-  const rules = getUserRules(user.id)
+  getUserRules(user.id)
     .cursor()
     .eachAsync(rule => {
       log("Processing rule", "info", user.id, rule.id, rule);

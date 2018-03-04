@@ -1,5 +1,4 @@
 import { model, Document, Schema } from "mongoose";
-import { Strategy } from "passport-facebook";
 
 interface IRule {
   userID: string;
@@ -19,7 +18,7 @@ const ruleSchema = new Schema({
   period: Number
 });
 
-interface IRuleModel extends IRule, Document {}
+interface IRuleModel extends IRule, Document { }
 
 const Rule = model<IRuleModel>("Rule", ruleSchema);
 

@@ -6,14 +6,12 @@ import { Request } from "express";
 import { IRuleModel } from "./../../models/rules/Rule";
 import { ImapConfigType } from "./ImapConfigType";
 import { getConfigByUserID } from "../../services/ImapConfigService";
-import { getMostActiveRules } from "../../services/StatService";
-import { RuleStatType } from "./RuleStatType";
 import { GraphQLInt } from "graphql";
 import { IMetaStat } from "../../models/stat/MetaStat";
 import { MetaStatType } from "./MetaStatType";
 import { AppStatType } from "./AppStatType";
 
-const { GraphQLObjectType, GraphQLID, GraphQLNonNull, GraphQLList } = graphql;
+const { GraphQLObjectType, GraphQLID, GraphQLNonNull } = graphql;
 
 const RootQueryType = new GraphQLObjectType({
   name: "RootQueryType",

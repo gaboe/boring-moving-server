@@ -1,7 +1,6 @@
 import {
   GraphQLObjectType,
   GraphQLString,
-  GraphQLID,
   GraphQLNonNull
 } from "graphql";
 
@@ -9,8 +8,6 @@ import { UserType } from "./types/UserType";
 import * as AuthService from "./../services/Auth";
 import { RuleType } from "./../schema/types/RuleType";
 import { addRule, deleteRule } from "./../services/RuleService";
-import { IUserModel } from "./../models/users/User";
-import { Request } from "express";
 import { IAuth } from "./../models/auth/IAuth";
 import { IRuleModel } from "./../models/rules/Rule";
 import { GraphQLInt } from "graphql/type/scalars";
@@ -19,6 +16,7 @@ import { logInfo } from "../services/LogService";
 import { ImapConfigType } from "./types/ImapConfigType";
 import { saveImapConfig } from "../services/ImapConfigService";
 import { IImapConfigModel } from "../models/users/ImapConfig";
+import { Request as ExpressRequest } from "express";
 
 const mutation = new GraphQLObjectType({
   name: "Mutation",
@@ -31,7 +29,7 @@ const mutation = new GraphQLObjectType({
         firstName: { type: new GraphQLNonNull(GraphQLString) },
         lastName: { type: new GraphQLNonNull(GraphQLString) }
       },
-      resolve(_, user: NonAuthenificatedUser, req: Request) {
+      resolve(_, user: NonAuthenificatedUser, req: ExpressRequest) {
         logInfo("Authentificate mutation", { user }, req.user);
         return AuthService.authentificate(user, req);
       }
@@ -42,7 +40,7 @@ const mutation = new GraphQLObjectType({
         email: { type: new GraphQLNonNull(GraphQLString) },
         password: { type: new GraphQLNonNull(GraphQLString) }
       },
-      resolve(_, { email, password }: IAuth, req: Request) {
+      resolve(_, { email, password }: IAuth, req: ExpressRequest) {
         return AuthService.signup({ email, password }, req);
       }
     },
@@ -60,7 +58,7 @@ const mutation = new GraphQLObjectType({
         email: { type: new GraphQLNonNull(GraphQLString) },
         password: { type: new GraphQLNonNull(GraphQLString) }
       },
-      resolve(_, { email, password }: IAuth, req: Request) {
+      resolve(_, { email, password }: IAuth, req: ExpressRequest) {
         return AuthService.login({ email, password }, req);
       }
     },
@@ -76,7 +74,7 @@ const mutation = new GraphQLObjectType({
       resolve(
         _,
         { sender, subject, content, folderName, period }: IRuleModel,
-        req: Request
+        req: ExpressRequest
       ) {
         return addRule(sender, subject, content, folderName, period, req);
       }
@@ -89,7 +87,7 @@ const mutation = new GraphQLObjectType({
           description: "Id of rule, which will be deleted"
         }
       },
-      async resolve(_, { id }: { id: string }, req: Request) {
+      async resolve(_, { id }: { id: string }, req: ExpressRequest) {
         return await deleteRule(id, req.user.id);
       }
     },
@@ -104,7 +102,7 @@ const mutation = new GraphQLObjectType({
       resolve(
         _,
         { userName, password, host, port }: IImapConfigModel,
-        req: Request
+        req: ExpressRequest
       ) {
         return saveImapConfig(userName, password, host, port, req);
       }

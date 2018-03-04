@@ -16,7 +16,6 @@ import * as mongoose from "mongoose";
 import * as passport from "passport";
 import expressValidator = require("express-validator");
 import * as homeController from "./controllers/Home";
-import * as passportConfig from "./config/Passport";
 import * as expressGraphQL from "express-graphql";
 import schema from "./schema/Schema";
 import * as cors from "cors";

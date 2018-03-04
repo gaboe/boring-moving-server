@@ -1,7 +1,6 @@
 import {
   ImapConfig,
   IImapConfig,
-  IImapConfigModel
 } from "../models/users/ImapConfig";
 import { Request } from "express";
 

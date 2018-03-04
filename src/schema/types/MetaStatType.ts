@@ -1,26 +1,18 @@
 import {
   GraphQLObjectType,
-  GraphQLString,
   GraphQLID,
   GraphQLList,
   GraphQLNonNull,
   GraphQLInt,
-  parseValue
 } from "graphql";
 import { UserType } from "./UserType";
-import { IStat } from "../../models/stat/Stat";
-import { getUserByID } from "../../services/UserService";
-import { RuleType } from "./RuleType";
-import { JobRunType } from "./JobRunType";
-import { getRuleByID } from "../../services/RuleService";
 import {
-  getJobRunByID,
   getMostActiveRules,
   getAllMovedEmailsCount
 } from "../../services/StatService";
 import { IMetaStat } from "../../models/stat/MetaStat";
 import { RuleStatType } from "./RuleStatType";
-import { Request } from "express";
+import { getUserByID } from "../../services/UserService";
 
 const MetaStatType = new GraphQLObjectType({
   name: "MetaStatType",

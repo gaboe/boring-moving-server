@@ -54,6 +54,9 @@
         "no-internal-module": true,
         "no-trailing-whitespace": true,
         "prefer-const": true,
-        "jsdoc-format": true
+        "jsdoc-format": true,
+        "no-unused-expression": true,
+        "curly": true,
+        "no-unused-variable": true
     }
 }

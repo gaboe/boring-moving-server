@@ -1,15 +1,11 @@
 import * as passport from "passport";
-import * as request from "request";
 import * as passportLocal from "passport-local";
-import * as passportFacebook from "passport-facebook";
 import * as _ from "lodash";
 
-// import { User, UserType } from '../models/User';
 import { User, IUserModel } from "../models/users/User";
 import { Request, Response, NextFunction } from "express";
 
 const LocalStrategy = passportLocal.Strategy;
-const FacebookStrategy = passportFacebook.Strategy;
 
 passport.serializeUser<any, any>((user, done) => {
   done(undefined, user.id);

@@ -1,7 +1,6 @@
-import { User, IUserModel } from "./../models/users/User";
-import { Rule, IRuleModel } from "./../models/rules/Rule";
+import { Rule } from "./../models/rules/Rule";
 import { Request } from "express";
-import { log, logInfo } from "./LogService";
+import { logInfo } from "./LogService";
 
 const addRule = (
   sender: string,

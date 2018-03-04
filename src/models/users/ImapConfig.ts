@@ -1,5 +1,4 @@
-import * as bcrypt from "bcrypt-nodejs";
-import { Error, Schema, Document, model } from "mongoose";
+import { Schema, Document, model } from "mongoose";
 
 interface IImapConfig {
   userID: string;
@@ -35,7 +34,7 @@ const imapConfigSchema = new Schema({
 //     });
 //   });
 // });
-interface IImapConfigModel extends IImapConfig, Document {}
+interface IImapConfigModel extends IImapConfig, Document { }
 
 const ImapConfig = model<IImapConfigModel>("ImapConfig", imapConfigSchema);
 

@@ -2,12 +2,8 @@ import {
   GraphQLObjectType,
   GraphQLString,
   GraphQLID,
-  GraphQLList,
   GraphQLNonNull
 } from "graphql";
-import { RuleType } from "./RuleType";
-import { getUserRules } from "./../../services/RuleService";
-import { IUserModel } from "./../../models/users/User";
 import { UserType } from "./UserType";
 import { getUserByID } from "../../services/UserService";
 import { IImapConfigModel } from "../../models/users/ImapConfig";
