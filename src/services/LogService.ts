@@ -3,6 +3,7 @@ import { LogName, AppLogName } from "../models/logs/LogName";
 import { MailLog, IMailLogModel } from "../models/logs/MailLog";
 const CircularJSON = require("circular-json");
 
+// tslint:disable-next-line:no-any
 const logInfo = (name: AppLogName, content: any, userID?: string) => {
   const logLevel: LogLevel = "info";
   const log = new Log({
@@ -14,7 +15,7 @@ const logInfo = (name: AppLogName, content: any, userID?: string) => {
   log.save();
   console.log(
     `Log name: ${name}, Log level: ${logLevel} --userID: ${userID} \nContent: ${
-      log.content
+    log.content
     }`
   );
 };
@@ -23,6 +24,7 @@ const log = (
   logLevel: LogLevel,
   userID?: string,
   ruleID?: string,
+  // tslint:disable-next-line:no-any
   content?: any
 ) => {
   const mailLog = new MailLog({
@@ -47,6 +49,7 @@ const logSync = async (
   logLevel: LogLevel,
   userID?: string,
   ruleID?: string,
+  // tslint:disable-next-line:no-any
   content?: any
 ) => {
   const mailLog = new MailLog({

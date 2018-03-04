@@ -57,6 +57,7 @@
         "jsdoc-format": true,
         "no-unused-expression": true,
         "curly": true,
-        "no-unused-variable": true
+        "no-unused-variable": true,
+        "no-any": true
     }
 }

@@ -9,14 +9,14 @@ const LocalStrategy = require("passport-local").Strategy;
 
 // SerializeUser is used to provide some identifying token that can be saved
 // in the users session.  We traditionally use the 'ID' for this.
-passport.serializeUser((user: any, done: any) => {
+passport.serializeUser((user: IUserModel, done: (error: Error, userID: string) => void) => {
   done(null, user.id);
 });
 
 // The counterpart of 'serializeUser'.  Given only a user's ID, we must return
 // the user object.  This object is placed on 'req.user'.
-passport.deserializeUser((id: any, done: any) => {
-  User.findById(id, (err: any, user: any) => {
+passport.deserializeUser((id: IUserModel, done: (error: Error, user: IUserModel) => void) => {
+  User.findById(id, (err: Error, user: IUserModel) => {
     done(err, user);
   });
 });
@@ -133,7 +133,7 @@ const login2 = (googleID: string, req: Request) => {
   return new Promise((resolve, reject) => {
     passport.authenticate(
       "local",
-      (err: Error, user: IUserModel, info: any) => {
+      (err: Error, user: IUserModel, _) => {
         if (!user) {
           reject("Invalid credentials.");
         }

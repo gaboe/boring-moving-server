@@ -38,9 +38,9 @@ const processEmails = (
   log("SearchCriterias created", "info", null, rule.id, searchCriteria);
   const imap: Imap = new Imap(config);
 
-  imap.once("ready", function() {
-    openInbox(this, function(err, box) {
-      imap.search(searchCriteria as any[], async (err, uids) => {
+  imap.once("ready", function () {
+    openInbox(this, function (err, box) {
+      imap.search(searchCriteria, async (err, uids) => {
         console.log("uids:", uids);
         if (uids.length === 0) {
           imap.end();
@@ -49,17 +49,17 @@ const processEmails = (
         }
         const validUIDs = Array<string>();
         const f = imap.fetch(uids, { bodies: "" });
-        f.on("message", function(msg: Imap.ImapMessage, seqno) {
-          msg.once("attributes", function(attrs) {
+        f.on("message", function (msg: Imap.ImapMessage, seqno) {
+          msg.once("attributes", function (attrs) {
             if (isAfter(rule.period, inspect(attrs.date))) {
               validUIDs.push(inspect(attrs.uid));
             }
           });
         });
-        f.once("error", function(err) {
+        f.once("error", function (err) {
           log("Fetch error", "error", null, rule.id, err);
         });
-        f.once("end", function() {
+        f.once("end", function () {
           if (validUIDs.length === 0) {
             imap.end();
             log("No valid mails discovered", "success", null, rule.id);
@@ -82,11 +82,11 @@ const processEmails = (
     });
   });
 
-  imap.once("error", function(err) {
+  imap.once("error", function (err) {
     log("Connection error", "error", null, rule.id, { err, config });
   });
 
-  imap.once("end", function() {
+  imap.once("end", function () {
     log("Connection ended", "info", null, rule.id);
   });
   imap.connect();
