@@ -29,7 +29,7 @@ const getRuleByID = (id: string) => {
 };
 
 const getUserRules = (userID: string) => {
-  return Rule.find({ userID: userID }, (err, res) => {
+  return Rule.find({ userID: userID }, (_, res) => {
     return res;
   });
 };

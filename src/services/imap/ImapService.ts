@@ -39,10 +39,10 @@ const processEmails = (
   const imap: Imap = new Imap(config);
 
   imap.once("ready", function () {
-    openInbox(imap, function (err, box) {
+    openInbox(imap, function (_, __) {
       // imap types are using any, think about sending PR
       // tslint:disable-next-line:no-any
-      imap.search(searchCriteria as any[], async (err, uids) => {
+      imap.search(searchCriteria as any[], async (_, uids) => {
         console.log("uids:", uids);
         if (uids.length === 0) {
           imap.end();
@@ -51,7 +51,7 @@ const processEmails = (
         }
         const validUIDs = Array<string>();
         const f = imap.fetch(uids, { bodies: "" });
-        f.on("message", function (msg: Imap.ImapMessage, seqno) {
+        f.on("message", function (msg: Imap.ImapMessage, _) {
           msg.once("attributes", function (attrs) {
             if (isAfter(rule.period, inspect(attrs.date))) {
               validUIDs.push(inspect(attrs.uid));
@@ -71,13 +71,13 @@ const processEmails = (
             validUIDs,
             boxname: rule.folderName
           });
-          imap.openBox(rule.folderName, (openBoxError, mailbox) => {
+          imap.openBox(rule.folderName, (openBoxError, _) => {
             if (openBoxError) {
-              imap.addBox(rule.folderName, createBoxError => {
-                moveEmails(imap, mailbox, validUIDs, rule, jobRun);
+              imap.addBox(rule.folderName, _ => {
+                moveEmails(imap, validUIDs, rule, jobRun);
               });
             }
-            moveEmails(imap, mailbox, validUIDs, rule, jobRun);
+            moveEmails(imap, validUIDs, rule, jobRun);
           });
         });
       });
@@ -96,7 +96,6 @@ const processEmails = (
 
 function moveEmails(
   imap: Imap,
-  mailbox: Imap.Box,
   uids: string[],
   rule: IRuleModel,
   jobRun: IJobRunModel

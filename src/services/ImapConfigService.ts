@@ -32,7 +32,7 @@ const configExists = async (userID: string): Promise<boolean> => {
   return config.length > 0;
 };
 
-const nameof = <T>(key: keyof T, instance?: T): keyof T => key;
+const nameof = <T>(key: keyof T): keyof T => key;
 
 const getConfigByUserID = (userID: string) => {
   return ImapConfig.findOne({ userID });

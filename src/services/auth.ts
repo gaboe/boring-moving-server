@@ -60,7 +60,7 @@ function signup({ email, password }: IAuth, req: Request) {
 // GraphQL, as GraphQL always expects to see a promise for handling async code.
 function login({ email, password }: IAuth, req: Request) {
   return new Promise((resolve, reject) => {
-    passport.authenticate("local", (err: Error, user: IUserModel) => {
+    passport.authenticate("local", (_: Error, user: IUserModel) => {
       if (!user) {
         reject("Invalid credentials.");
       }
@@ -133,11 +133,11 @@ const login2 = (googleID: string, req: Request) => {
   return new Promise((resolve, reject) => {
     passport.authenticate(
       "local",
-      (err: Error, user: IUserModel, _: never) => {
+      (_: Error, user: IUserModel, __: never) => {
         if (!user) {
           reject("Invalid credentials.");
         }
-        req.login(user, e => {
+        req.login(user, _ => {
           resolve(user);
         });
       }
