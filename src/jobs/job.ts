@@ -1,4 +1,4 @@
-import { log, getLastMailLog } from "../services/LogService";
+import { logJobStatus, logProcessedUser, getLastMailLog, log } from "../services/LogService";
 import { getAllUsers } from "../services/UserService";
 import { getFilledImapConfigByUserID } from "../services/ImapConfigService";
 import { createConfig, processEmails } from "../services/imap/ImapService";
@@ -12,7 +12,7 @@ import * as moment from "moment";
 import { IJobRunModel } from "../models/stat/JobRun";
 
 const executeJob = async () => {
-  log("Job started", "info");
+  logJobStatus("Job started", "info");
   const jobRun = await createJobRun("EmailMover");
   const users = await getAllUsers();
   watchEndOfJob(5, jobRun);
@@ -30,7 +30,7 @@ const watchEndOfJob = (timeOutSeconds: number, jobRun: IJobRunModel) => {
   setTimeout(async () => {
     if (await wasLastEmailLogLateEnought(timeOutSeconds)) {
       const job = await setCurrentJobAsFinished(jobRun.id);
-      log("Job exited", "success", null, null, job);
+      logJobStatus("Job exited", "success", job);
       return;
     }
     console.log("Job is still running");
@@ -46,7 +46,7 @@ const wasLastEmailLogLateEnought = async (timeOutSeconds: number) => {
 };
 
 const processUser = (user: IUserModel, jobRun: IJobRunModel) => {
-  log("Processing user", "info", user.id, null, user.email);
+  logProcessedUser("Processing user", "info", user.id, user.imapConfig);
   const config = createConfig(user);
   getUserRules(user.id)
     .cursor()

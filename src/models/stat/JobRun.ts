@@ -3,13 +3,13 @@ import { JobRunName } from "./JobRunName";
 
 interface IJobRun {
   dateStarted: string;
-  dateFinished: string;
+  dateFinished: string | null;
   name: JobRunName;
 
   iteration: number;
 }
 
-interface IJobRunModel extends IJobRun, Document {}
+interface IJobRunModel extends IJobRun, Document { }
 
 const schema = new Schema(
   {

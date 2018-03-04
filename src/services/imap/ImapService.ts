@@ -35,7 +35,7 @@ const processEmails = (
   jobRun: IJobRunModel
 ) => {
   const searchCriteria: SearchCriterias = createSearchCriteria(rule);
-  log("SearchCriterias created", "info", null, rule.id, searchCriteria);
+  log("SearchCriterias created", "info", rule.userID, rule.id, searchCriteria);
   const imap: Imap = new Imap(config);
 
   imap.once("ready", function () {
@@ -46,7 +46,7 @@ const processEmails = (
         console.log("uids:", uids);
         if (uids.length === 0) {
           imap.end();
-          log("No valid mails discovered", "success", null, rule.id);
+          log("No valid mails discovered", "success", rule.userID, rule.id);
           return;
         }
         const validUIDs = Array<string>();
@@ -59,15 +59,15 @@ const processEmails = (
           });
         });
         f.once("error", function (err) {
-          log("Fetch error", "error", null, rule.id, err);
+          log("Fetch error", "error", rule.userID, rule.id, err);
         });
         f.once("end", function () {
           if (validUIDs.length === 0) {
             imap.end();
-            log("No valid mails discovered", "success", null, rule.id);
+            log("No valid mails discovered", "success", rule.userID, rule.id);
             return;
           }
-          log("Moving emails", "info", null, rule.id, {
+          log("Moving emails", "info", rule.userID, rule.id, {
             validUIDs,
             boxname: rule.folderName
           });
@@ -85,11 +85,11 @@ const processEmails = (
   });
 
   imap.once("error", function (err: Error) {
-    log("Connection error", "error", null, rule.id, { err, config });
+    log("Connection error", "error", rule.userID, rule.id, { err, config });
   });
 
   imap.once("end", function () {
-    log("Connection ended", "info", null, rule.id);
+    log("Connection ended", "info", rule.userID, rule.id);
   });
   imap.connect();
 };

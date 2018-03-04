@@ -52,7 +52,13 @@ app.use(cors(corsOptions));
 const mongoURL = process.env.MONGOLAB_URI || process.env.MONGODB_URI;
 console.log(`\nConnecting to db: ${mongoURL}\n`);
 
-mongoose.connect(mongoURL);
+if (mongoURL) {
+  mongoose.connect(mongoURL);
+}
+else {
+  console.log(`Missing MONGOLAB_URI or MONGODB_URI from config`);
+  process.exit();
+}
 
 mongoose.connection.on("error", e => {
   console.log(`MongoDB connection error: ${e}`);
@@ -64,23 +70,29 @@ mongoose.connection.on("error", e => {
  */
 app.set("port", process.env.PORT || 3000);
 app.set("views", path.join(__dirname, "../views"));
-app.set("view engine", "pug");
 app.use(compression());
 app.use(logger("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator());
-app.use(
-  session({
-    resave: true,
-    saveUninitialized: true,
-    secret: process.env.SESSION_SECRET,
-    store: new MongoStore({
-      url: mongoURL,
-      autoReconnect: true
+if (process.env.SESSION_SECRET && mongoURL) {
+  app.use(
+    session({
+      resave: true,
+      saveUninitialized: true,
+      secret: process.env.SESSION_SECRET,
+      store: new MongoStore({
+        url: mongoURL,
+        autoReconnect: true
+      })
     })
-  })
-);
+  );
+}
+else {
+  console.log(`Missing SESSION_SECRET or MONGO_URL from config`);
+  process.exit();
+}
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());

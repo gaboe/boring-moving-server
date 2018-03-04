@@ -22,8 +22,8 @@ const logInfo = (name: AppLogName, content: any, userID?: string) => {
 const log = (
   name: LogName,
   logLevel: LogLevel,
-  userID?: string,
-  ruleID?: string,
+  userID: string,
+  ruleID: string,
   // tslint:disable-next-line:no-any
   content?: any
 ) => {
@@ -41,7 +41,11 @@ const log = (
 };
 
 const getLastMailLog = async (): Promise<IMailLogModel> => {
-  return await MailLog.findOne().sort({ dateCreated: "desc" });
+  const mailLog = await MailLog.findOne().sort({ dateCreated: "desc" });
+  if (mailLog) {
+    return mailLog;
+  }
+  return new MailLog();
 };
 
 const logSync = async (
@@ -65,4 +69,33 @@ const logSync = async (
   );
 };
 
-export { logInfo, log, logSync, getLastMailLog };
+// tslint:disable-next-line:no-any
+const logJobStatus = (name: LogName, logLevel: LogLevel, content?: any) => {
+  const log = new Log({
+    name,
+    content: CircularJSON.stringify(content),
+    logLevel
+  });
+  log.save();
+  console.log(
+    `Log name: ${name}, Log level: ${logLevel} \nContent: ${
+    log.content
+    }`
+  );
+};
+
+// tslint:disable-next-line:no-any
+const logProcessedUser = (name: LogName, logLevel: LogLevel, userID: string, content?: any) => {
+  const log = new Log({
+    name,
+    userID,
+    content: CircularJSON.stringify(content),
+    logLevel
+  });
+  log.save();
+  console.log(
+    `Log name: ${name}, Log level: ${logLevel}\n-- userID: ${userID} \ --content: ${log.content}`
+  );
+};
+
+export { logInfo, log, logSync, getLastMailLog, logJobStatus, logProcessedUser };

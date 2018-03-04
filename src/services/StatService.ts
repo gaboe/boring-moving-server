@@ -8,7 +8,7 @@ const createJobRun = async (name: JobRunName): Promise<IJobRunModel> => {
   const _jobRun: IJobRun = {
     name,
     dateFinished: null,
-    dateStarted: null,
+    dateStarted: (new Date()).toDateString(),
     iteration: await getLastIteration(name)
   };
   const jobRun = new JobRun(_jobRun);
@@ -17,7 +17,7 @@ const createJobRun = async (name: JobRunName): Promise<IJobRunModel> => {
 };
 
 const getLastIteration = async (name: JobRunName): Promise<number> => {
-  const job: IJobRunModel = await JobRun.findOne({ name }).sort({ iteration: -1 });
+  const job: IJobRunModel | null = await JobRun.findOne({ name }).sort({ iteration: -1 });
   if (job) {
     return job.iteration + 1;
   }

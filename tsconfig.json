@@ -17,6 +17,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "pretty": true,
+    "strictNullChecks": true,
     "baseUrl": ".",
     "paths": {
       "*": [
