@@ -21,7 +21,7 @@ const createConfig = ({ imapConfig }: IUserModel): Imap.Config => {
   return config;
 };
 
-const openInbox = (imap: Imap, cb) => {
+const openInbox = (imap: Imap, cb: (error: Error, box: Imap.Box) => void) => {
   imap.openBox("INBOX", true, cb);
 };
 const isAfter = (period: number, emailDate: string) => {
@@ -40,7 +40,9 @@ const processEmails = (
 
   imap.once("ready", function () {
     openInbox(this, function (err, box) {
-      imap.search(searchCriteria, async (err, uids) => {
+      // imap types are using any, think about sending PR
+      // tslint:disable-next-line:no-any
+      imap.search(searchCriteria as any[], async (err, uids) => {
         console.log("uids:", uids);
         if (uids.length === 0) {
           imap.end();
@@ -82,7 +84,7 @@ const processEmails = (
     });
   });
 
-  imap.once("error", function (err) {
+  imap.once("error", function (err: Error) {
     log("Connection error", "error", null, rule.id, { err, config });
   });
 

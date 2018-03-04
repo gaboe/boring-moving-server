@@ -103,7 +103,7 @@ function login({ email, password }: IAuth, req: Request) {
 // );
 
 passport.use(
-  new LocalStrategy(async function (googleID, _, done) {
+  new LocalStrategy(async function (googleID: string, _: never, done: (error: Error, user: IUserModel) => void) {
     const user = await getUserByGoogleID(googleID);
     return done(null, user);
   })
@@ -133,7 +133,7 @@ const login2 = (googleID: string, req: Request) => {
   return new Promise((resolve, reject) => {
     passport.authenticate(
       "local",
-      (err: Error, user: IUserModel, _) => {
+      (err: Error, user: IUserModel, _: never) => {
         if (!user) {
           reject("Invalid credentials.");
         }

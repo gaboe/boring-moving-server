@@ -58,6 +58,7 @@
         "no-unused-expression": true,
         "curly": true,
         "no-unused-variable": true,
-        "no-any": true
+        "no-any": true,
+        "strict-type-predicates": true
     }
 }

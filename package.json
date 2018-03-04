@@ -10,36 +10,36 @@
   "scripts": {
     "dev": " yarn build-ts && yarn tslint && yarn dev-watch",
     "prod": "yarn build && node ./dist/server.js",
-    "dev-watch":
-      "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"yarn watch-ts\" \"yarn serve\"",
+    "dev-watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"yarn watch-ts\" \"yarn serve\"",
     "start": "yarn run build && yarn run watch",
-    "build":
-      "yarn run build-ts && yarn run tslint && yarn run copy-static-assets",
+    "build": "yarn run build-ts && yarn run tslint && yarn run copy-static-assets",
     "serve": "nodemon dist/server.js",
-    "watch":
-      "concurrently -k -p \"[{name}]\" -n \"Sass,TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"yarn run watch-sass\" \"yarn run watch-ts\" \"yarn run serve\"",
+    "watch": "concurrently -k -p \"[{name}]\" -n \"Sass,TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"yarn run watch-sass\" \"yarn run watch-ts\" \"yarn run serve\"",
     "test": "jest --forceExit",
     "build-ts": "tsc",
     "watch-ts": "tsc -w",
     "build-sass": "node-sass src/public/css/main.scss dist/public/css/main.css",
-    "watch-sass":
-      "node-sass -w src/public/css/main.scss dist/public/css/main.css",
+    "watch-sass": "node-sass -w src/public/css/main.scss dist/public/css/main.css",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
     "copy-static-assets": "node copyStaticAssets.js",
     "debug": "yarn run build && yarn run watch-debug",
     "serve-debug": "nodemon --inspect dist/server.js",
-    "watch-debug":
-      "concurrently -k -p \"[{name}]\" -n \"Sass,TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"yarn run watch-sass\" \"yarn run watch-ts\" \"yarn run serve-debug\""
+    "watch-debug": "concurrently -k -p \"[{name}]\" -n \"Sass,TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"yarn run watch-sass\" \"yarn run watch-ts\" \"yarn run serve-debug\""
   },
   "jest": {
     "globals": {
       "__TS_CONFIG__": "tsconfig.json"
     },
-    "moduleFileExtensions": ["ts", "js"],
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
     "transform": {
       "^.+\\.(ts|tsx)$": "./node_modules/ts-jest/preprocessor.js"
     },
-    "testMatch": ["**/test/**/*.test.(ts|js)"],
+    "testMatch": [
+      "**/test/**/*.test.(ts|js)"
+    ],
     "testEnvironment": "node"
   },
   "dependencies": {
@@ -81,10 +81,13 @@
     "@types/circular-json": "^0.4.0",
     "@types/compression": "0.0.35",
     "@types/connect-mongo": "0.0.32",
+    "@types/cors": "^2.8.3",
     "@types/dotenv": "^4.0.2",
     "@types/errorhandler": "0.0.32",
     "@types/express": "^4.11.1",
+    "@types/express-graphql": "^0.0.36",
     "@types/graphql": "^0.12.3",
+    "@types/imap": "^0.8.29",
     "@types/jest": "^22.1.1",
     "@types/jquery": "^3.3.0",
     "@types/lodash": "^4.14.100",

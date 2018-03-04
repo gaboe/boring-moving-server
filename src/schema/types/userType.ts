@@ -9,7 +9,7 @@ import { RuleType } from "./RuleType";
 import { getUserRules } from "./../../services/RuleService";
 import { IUserModel } from "./../../models/users/User";
 
-const UserType = new GraphQLObjectType({
+const UserType: GraphQLObjectType = new GraphQLObjectType({
   name: "UserType",
   fields: {
     id: { type: new GraphQLNonNull(GraphQLID) },
