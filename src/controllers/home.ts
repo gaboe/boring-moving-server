@@ -5,12 +5,14 @@ import { executeJob } from "../jobs/Job";
  * Home page.
  */
 export let index = (_: Request, res: Response) => {
-  res.render("home", {
-    title: "Home"
+  res.json({
+    message: "App is runing",
   });
 };
 
 export const startJob = (_: Request, res: Response) => {
-  res.render("job");
+  res.json({
+    message: "Job was executed",
+  });
   executeJob();
 };
