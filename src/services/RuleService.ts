@@ -1,4 +1,4 @@
-import { Rule } from "./../models/rules/Rule";
+import { Rule, IRuleModel } from "./../models/rules/Rule";
 import { Request } from "express";
 import { logInfo } from "./LogService";
 
@@ -40,4 +40,10 @@ const deleteRule = async (ruleID: string, userID: string) => {
   return rule;
 };
 
-export { addRule, getRuleByID, getUserRules, deleteRule };
+const updateRule = async (rule: IRuleModel, req: Request) => {
+  rule.userID = req.user && req.user.id;
+  await Rule.findByIdAndUpdate(rule.id, rule);
+  return Rule.findById(rule.id);
+};
+
+export { addRule, getRuleByID, getUserRules, deleteRule, updateRule };

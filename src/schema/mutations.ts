@@ -7,10 +7,10 @@ import {
 import { UserType } from "./types/UserType";
 import * as AuthService from "./../services/Auth";
 import { RuleType } from "./../schema/types/RuleType";
-import { addRule, deleteRule } from "./../services/RuleService";
+import { addRule, deleteRule, updateRule } from "./../services/RuleService";
 import { IAuth } from "./../models/auth/IAuth";
 import { IRuleModel } from "./../models/rules/Rule";
-import { GraphQLInt } from "graphql/type/scalars";
+import { GraphQLInt, GraphQLID } from "graphql/type/scalars";
 import { NonAuthenificatedUser } from "../models/users/NonAuthentificatedUser";
 import { logInfo } from "../services/LogService";
 import { ImapConfigType } from "./types/ImapConfigType";
@@ -106,8 +106,27 @@ const mutation = new GraphQLObjectType({
       ) {
         return saveImapConfig(userName, password, host, port, req);
       }
-    }
+    },
+    updateRule: {
+      type: RuleType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLID), description: "RuleID" },
+        sender: { type: new GraphQLNonNull(GraphQLString) },
+        subject: { type: GraphQLString },
+        content: { type: GraphQLString },
+        folderName: { type: new GraphQLNonNull(GraphQLString) },
+        period: { type: new GraphQLNonNull(GraphQLInt) },
+      },
+      async resolve(
+        _,
+        rule: IRuleModel,
+        req: ExpressRequest
+      ) {
+        return await updateRule(rule, req);
+      }
+    },
   }
 });
+
 
 export default mutation;
