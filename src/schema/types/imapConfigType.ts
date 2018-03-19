@@ -10,7 +10,7 @@ import { IImapConfigModel } from "../../models/users/ImapConfig";
 
 const ImapConfigType = new GraphQLObjectType({
   name: "ImapConfigType",
-  fields: {
+  fields: () => ({
     id: { type: new GraphQLNonNull(GraphQLID) },
     userID: { type: new GraphQLNonNull(GraphQLID) },
     userName: { type: new GraphQLNonNull(GraphQLString) },
@@ -23,7 +23,7 @@ const ImapConfigType = new GraphQLObjectType({
         return getUserByID(parentValue.userID);
       }
     }
-  }
+  })
 });
 
 export { ImapConfigType };

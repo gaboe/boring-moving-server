@@ -46,4 +46,12 @@ const getFilledImapConfigByUserID = (userID: string) => {
     .where(nameof<IImapConfig>("port"), { $ne: null });
 };
 
-export { getFilledImapConfigByUserID, saveImapConfig, getConfigByUserID };
+const hasCompleteImapConfig = async (userID: string) => {
+  const imapConfig = await getConfigByUserID(userID);
+  if (imapConfig && imapConfig.userName && imapConfig.password && imapConfig.port && imapConfig.host) {
+    return true;
+  }
+  return false;
+};
+
+export { getFilledImapConfigByUserID, saveImapConfig, getConfigByUserID, hasCompleteImapConfig };
