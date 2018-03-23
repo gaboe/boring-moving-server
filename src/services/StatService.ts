@@ -64,7 +64,7 @@ const getAllMovedEmailsCountForApplication = async () => {
   const appStats: IAppStat[] = await Stat.aggregate([
     { $group: { _id: null, emailCount: { $sum: "$movedEmailsCount" } } }
   ]);
-  return appStats.map(x => x.emailCount).reduce((a, b) => a + b);
+  return appStats.map(x => x.emailCount).reduce((a, b) => a + b, 0);
 };
 
 // TODO try refactor this using rxjs
