@@ -16,9 +16,10 @@ import * as mongoose from "mongoose";
 import * as passport from "passport";
 import expressValidator = require("express-validator");
 import * as homeController from "./controllers/Home";
-import * as expressGraphQL from "express-graphql";
+// import * as expressGraphQL from "express-graphql";
 import schema from "./schema/Schema";
 import * as cors from "cors";
+import { graphqlExpress, graphiqlExpress } from "apollo-server-express";
 
 const MongoStore = mongo(session);
 (<{ Promise: Function }>mongoose).Promise = global.Promise;
@@ -108,13 +109,14 @@ app.use((req, res, next) => {
  */
 app.get("/", homeController.index);
 app.get("/job", homeController.startJob);
-app.use(
-  "/graphql",
-  expressGraphQL({
-    schema,
-    graphiql: true
-  })
-);
+
+app.use("/graphql", bodyParser.json(), graphqlExpress({
+  schema,
+  tracing: true,
+  cacheControl: true
+}));
+
+app.get("/graphiql", graphiqlExpress({ endpointURL: "/graphql" })); // if you want GraphiQL enabled
 
 /**
  * Error Handler. Provides full stack - remove for production
