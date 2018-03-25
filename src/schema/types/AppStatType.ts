@@ -42,11 +42,11 @@ const AppStatType = new GraphQLObjectType({
                         processEmails(createConfig(config), { userID, sender, subject, content, folderName, period }, (_, uids) => {
                             return resolver(uids.length);
                         }, {
-                                onConnectionEnd: () => console.log("end"),
+                                onConnectionEnd: () => undefined,
                                 onConnectionError: (err) => reject(`Problem with connection ${err}`),
                                 onFechError: (err) => reject(`Problem with fetching emails ${err}`),
-                                onNoValidEmailsDiscovered: () => { return resolver(0); },
-                                onSearchCriteriasCreated: () => console.log("criteria created")
+                                onNoValidEmailsDiscovered: () => resolver(0),
+                                onSearchCriteriasCreated: () => undefined
                             });
                     });
                 });
