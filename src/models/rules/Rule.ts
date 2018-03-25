@@ -26,4 +26,4 @@ function getRuleByID(id: string) {
   return Rule.findById(id);
 }
 
-export { Rule, getRuleByID, IRuleModel };
+export { Rule, getRuleByID, IRuleModel, IRule };

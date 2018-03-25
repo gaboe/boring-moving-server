@@ -16,7 +16,6 @@ import { NonAuthenificatedUser } from "../models/users/NonAuthentificatedUser";
 import { ImapConfigType } from "./types/ImapConfigType";
 import { saveImapConfig } from "../services/ImapConfigService";
 import { IImapConfigModel } from "../models/users/ImapConfig";
-import { Request as ExpressRequest } from "express";
 import { ApolloRequest } from "apollo-graphql-server";
 
 const mutation = new GraphQLObjectType({
@@ -77,8 +76,7 @@ const mutation = new GraphQLObjectType({
       resolve(
         _,
         { sender, subject, content, folderName, period }: IRuleModel,
-        req: ExpressRequest
-      ) {
+        { req }: ApolloRequest) {
         return addRule(sender, subject, content, folderName, period, req);
       }
     },

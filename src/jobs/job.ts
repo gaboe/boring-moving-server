@@ -1,7 +1,7 @@
 import { logJobStatus, logProcessedUser, getLastMailLog, log } from "../services/LogService";
 import { getAllUsers } from "../services/UserService";
 import { getFilledImapConfigByUserID } from "../services/ImapConfigService";
-import { createConfig, processEmails } from "../services/imap/ImapService";
+import { createConfig, processEmails, moveEmails } from "../services/imap/ImapService";
 import { getUserRules } from "../services/RuleService";
 import { IUserModel } from "../models/users/User";
 import {
@@ -47,12 +47,13 @@ const wasLastEmailLogLateEnought = async (timeOutSeconds: number) => {
 
 const processUser = (user: IUserModel, jobRun: IJobRunModel) => {
   logProcessedUser("Processing user", "info", user.id, user.imapConfig);
-  const config = createConfig(user);
+  const config = createConfig(user.imapConfig);
   getUserRules(user.id)
     .cursor()
     .eachAsync(rule => {
       log("Processing rule", "info", user.id, rule.id, rule);
-      processEmails(config, rule, jobRun);
+      processEmails(config, rule,
+        (imap, uids) => moveEmails(imap, uids, rule, jobRun));
     });
 };
 

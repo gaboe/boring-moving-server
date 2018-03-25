@@ -1,15 +1,15 @@
 import * as Imap from "imap";
 import { inspect } from "util";
 import * as moment from "moment";
-import { IRuleModel } from "../../models/rules/Rule";
-import { SearchCriterias } from "./SearchCriteria";
+import { IRuleModel, IRule } from "../../models/rules/Rule";
 import { createSearchCriteria } from "./SearchCriteriaProvider";
 import { log } from "./../LogService";
-import { IUserModel } from "../../models/users/User";
 import { insertMovedEmailsStat } from "../StatService";
 import { IJobRunModel } from "../../models/stat/JobRun";
+import { IImapConfig } from "../../models/users/ImapConfig";
+import { SearchCriterias } from "./SearchCriteria";
 
-const createConfig = ({ imapConfig }: IUserModel): Imap.Config => {
+const createConfig = (imapConfig: IImapConfig): Imap.Config => {
   const config: Imap.Config = {
     user: imapConfig.userName,
     password: imapConfig.password,
@@ -17,7 +17,6 @@ const createConfig = ({ imapConfig }: IUserModel): Imap.Config => {
     port: imapConfig.port,
     tls: true
   };
-
   return config;
 };
 
@@ -29,13 +28,98 @@ const isAfter = (period: number, emailDate: string) => {
   c.add(-period, "minutes");
   return c.isAfter(moment(emailDate));
 };
+
+// const processEmails = (
+//   config: Imap.Config,
+//   rule: IRuleModel,
+//   processFn: (
+//     imap: Imap,
+//     uids: string[],
+//     rule: IRuleModel,
+//   ) => void
+// ) => {
+//   const searchCriteria: SearchCriterias = createSearchCriteria(rule);
+//   log("SearchCriterias created", "info", rule.userID, rule.id, searchCriteria);
+//   const imap: Imap = new Imap(config);
+
+//   imap.once("ready", function () {
+//     openInbox(imap, function (_, __) {
+//       // imap types are using any, think about sending PR
+//       // tslint:disable-next-line:no-any
+//       imap.search(searchCriteria as any[], async (_, uids) => {
+//         console.log("uids:", uids);
+//         if (uids.length === 0) {
+//           imap.end();
+//           log("No valid mails discovered", "success", rule.userID, rule.id);
+//           return;
+//         }
+//         const validUIDs = Array<string>();
+//         const fetch = imap.fetch(uids, { bodies: "" });
+//         fetch.on("message", function (msg: Imap.ImapMessage, _) {
+//           msg.once("attributes", function (attrs) {
+//             if (isAfter(rule.period, inspect(attrs.date))) {
+//               validUIDs.push(inspect(attrs.uid));
+//             }
+//           });
+//         });
+//         fetch.once("error", function (err) {
+//           log("Fetch error", "error", rule.userID, rule.id, err);
+//         });
+//         fetch.once("end", function () {
+//           if (validUIDs.length === 0) {
+//             imap.end();
+//             log("No valid mails discovered", "success", rule.userID, rule.id);
+//             return;
+//           }
+//           log("Moving emails", "info", rule.userID, rule.id, {
+//             validUIDs,
+//             boxname: rule.folderName
+//           });
+//           imap.openBox(rule.folderName, (openBoxError, _) => {
+//             if (openBoxError) {
+//               imap.addBox(rule.folderName, _ => {
+//                 processFn(imap, validUIDs, rule);
+//               });
+//             }
+//             processFn(imap, validUIDs, rule);
+//           });
+//         });
+//       });
+//     });
+//   });
+
+//   imap.once("error", function (err: Error) {
+//     log("Connection error", "error", rule.userID, rule.id, { err, config });
+//   });
+
+//   imap.once("end", function () {
+//     log("Connection ended", "info", rule.userID, rule.id);
+//   });
+//   imap.connect();
+// };
+
+type LogDefintion = {
+  onSearchCriteriasCreated: (searchCriterias: SearchCriterias) => void,
+  onNoValidEmailsDiscovered: () => void,
+  onFechError: (error: Error) => void,
+  onConnectionError: (error: Error) => void,
+  onConnectionEnd: () => void
+};
+
 const processEmails = (
   config: Imap.Config,
-  rule: IRuleModel,
-  jobRun: IJobRunModel
+  rule: IRule,
+  processFn: (
+    imap: Imap,
+    uids: string[],
+  ) => void,
+  logs?: LogDefintion
 ) => {
   const searchCriteria: SearchCriterias = createSearchCriteria(rule);
-  log("SearchCriterias created", "info", rule.userID, rule.id, searchCriteria);
+  if (logs) {
+    logs.onSearchCriteriasCreated(searchCriteria);
+  }
+  // log("SearchCriterias created", "info", rule.userID, rule.id, searchCriteria);
   const imap: Imap = new Imap(config);
 
   imap.once("ready", function () {
@@ -46,38 +130,47 @@ const processEmails = (
         console.log("uids:", uids);
         if (uids.length === 0) {
           imap.end();
-          log("No valid mails discovered", "success", rule.userID, rule.id);
+          if (logs) {
+            logs.onNoValidEmailsDiscovered();
+          }
+          // log("No valid mails discovered", "success", rule.userID, rule.id);
           return;
         }
         const validUIDs = Array<string>();
-        const f = imap.fetch(uids, { bodies: "" });
-        f.on("message", function (msg: Imap.ImapMessage, _) {
+        const fetch = imap.fetch(uids, { bodies: "" });
+        fetch.on("message", function (msg: Imap.ImapMessage, _) {
           msg.once("attributes", function (attrs) {
             if (isAfter(rule.period, inspect(attrs.date))) {
               validUIDs.push(inspect(attrs.uid));
             }
           });
         });
-        f.once("error", function (err) {
-          log("Fetch error", "error", rule.userID, rule.id, err);
+        fetch.once("error", function (err) {
+          if (logs) {
+            logs.onFechError(err);
+          }
         });
-        f.once("end", function () {
+        fetch.once("end", function () {
           if (validUIDs.length === 0) {
             imap.end();
-            log("No valid mails discovered", "success", rule.userID, rule.id);
+            if (logs) {
+              logs.onNoValidEmailsDiscovered();
+            }
+
+            // log("No valid mails discovered", "success", rule.userID, rule.id);
             return;
           }
-          log("Moving emails", "info", rule.userID, rule.id, {
-            validUIDs,
-            boxname: rule.folderName
-          });
+          // log("Moving emails", "info", rule.userID, rule.id, {
+          //   validUIDs,
+          //   boxname: rule.folderName
+          // });
           imap.openBox(rule.folderName, (openBoxError, _) => {
             if (openBoxError) {
               imap.addBox(rule.folderName, _ => {
-                moveEmails(imap, validUIDs, rule, jobRun);
+                processFn(imap, validUIDs);
               });
             }
-            moveEmails(imap, validUIDs, rule, jobRun);
+            processFn(imap, validUIDs);
           });
         });
       });
@@ -85,14 +178,21 @@ const processEmails = (
   });
 
   imap.once("error", function (err: Error) {
-    log("Connection error", "error", rule.userID, rule.id, { err, config });
+    if (logs) {
+      logs.onConnectionError(err);
+    }
+    // log("Connection error", "error", rule.userID, rule.id, { err, config });
   });
 
   imap.once("end", function () {
-    log("Connection ended", "info", rule.userID, rule.id);
+    if (logs) {
+      logs.onConnectionEnd();
+    }
+    // log("Connection ended", "info", rule.userID, rule.id);
   });
   imap.connect();
 };
+
 
 function moveEmails(
   imap: Imap,
@@ -116,4 +216,4 @@ function moveEmails(
   });
 }
 
-export { processEmails, createConfig };
+export { processEmails, createConfig, moveEmails };
