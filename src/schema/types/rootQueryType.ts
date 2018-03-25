@@ -10,6 +10,7 @@ import { IMetaStat } from "../../models/stat/MetaStat";
 import { MetaStatType } from "./MetaStatType";
 import { AppStatType } from "./AppStatType";
 import { ApolloRequest } from "apollo-graphql-server";
+import { withAuthentification } from "../../services/SecurityService";
 
 const { GraphQLObjectType, GraphQLID, GraphQLNonNull } = graphql;
 
@@ -32,18 +33,20 @@ const RootQueryType = new GraphQLObjectType({
     imapConfig: {
       type: ImapConfigType,
       resolve(_, __, { req }: ApolloRequest) {
-        return getConfigByUserID(req.user.id);
+        return withAuthentification(req, (id) => getConfigByUserID(id));
       }
     },
     mostActiveRules: {
-      type: new GraphQLNonNull(MetaStatType),
+      type: MetaStatType,
       args: { count: { type: new GraphQLNonNull(GraphQLInt) } },
       resolve(_, { count }: { count: number }, { req }: ApolloRequest) {
-        const metaStat: IMetaStat = {
-          userID: req.user.id,
-          takeRulesCount: count
-        };
-        return metaStat;
+        return withAuthentification(req, (id) => {
+          const metaStat: IMetaStat = {
+            userID: id,
+            takeRulesCount: count
+          };
+          return metaStat;
+        });
       }
     },
     appStat: {

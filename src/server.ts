@@ -117,7 +117,7 @@ app.use("/graphql", bodyParser.json(), graphqlExpress(req => {
     },
     schema,
     tracing: true,
-    cacheControl: true
+    cacheControl: true,
   };
 }));
 
@@ -138,7 +138,7 @@ if (process.env.APOLLO_ENGINE_SECRET) {
   });
 }
 else {
-  console.log(`Missing APOLLO_ENGINE_SECRET from config`);
+  console.error(`Missing APOLLO_ENGINE_SECRET from config`);
   process.exit();
 }
 
