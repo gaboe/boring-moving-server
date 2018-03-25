@@ -3,6 +3,7 @@ import {
   IImapConfig,
 } from "../models/users/ImapConfig";
 import { Request } from "express";
+import { decryptImapConfig, encryptImapConfig } from "./SecurityService";
 
 const saveImapConfig = async (
   userName: string,
@@ -20,8 +21,8 @@ const saveImapConfig = async (
   };
 
   if (await configExists(req.user.id)) {
-    await ImapConfig.updateOne({ userID: req.user.id }, config);
-    return ImapConfig.findOne({ userID: req.user.id });
+    await ImapConfig.updateOne({ userID: req.user.id }, encryptImapConfig(config));
+    return decryptImapConfig(await ImapConfig.findOne({ userID: req.user.id }));
   } else {
     return ImapConfig.create(new ImapConfig(config));
   }
@@ -34,8 +35,8 @@ const configExists = async (userID: string): Promise<boolean> => {
 
 const nameof = <T>(key: keyof T): keyof T => key;
 
-const getConfigByUserID = (userID: string) => {
-  return ImapConfig.findOne({ userID });
+const getConfigByUserID = async (userID: string) => {
+  return decryptImapConfig(await ImapConfig.findOne({ userID }));
 };
 
 const getFilledImapConfigByUserID = (userID: string) => {

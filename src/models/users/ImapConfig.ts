@@ -1,4 +1,5 @@
 import { Schema, Document, model } from "mongoose";
+import { encryptImapConfig } from "../../services/SecurityService";
 
 interface IImapConfig {
   userID: string;
@@ -16,24 +17,11 @@ const imapConfigSchema = new Schema({
   port: Number
 });
 
-// imapConfigSchema.pre("save", function save(next) {
-//   const config: IImapConfigModel = this;
-//   if (!config.isModified("password")) {
-//     return next();
-//   }
-//   bcrypt.genSalt(10, (err, salt) => {
-//     if (err) {
-//       return next(err);
-//     }
-//     bcrypt.hash(config.password, salt, undefined, (err, hash) => {
-//       if (err) {
-//         return next(err);
-//       }
-//       config.password = hash;
-//       next();
-//     });
-//   });
-// });
+imapConfigSchema.pre("save", function (this: IImapConfigModel, next) {
+  this.password = encryptImapConfig(this).password;
+  next();
+});
+
 interface IImapConfigModel extends IImapConfig, Document { }
 
 const ImapConfig = model<IImapConfigModel>("ImapConfig", imapConfigSchema);
