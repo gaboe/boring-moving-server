@@ -12,11 +12,12 @@ import { IAuth } from "./../models/auth/IAuth";
 import { IRuleModel } from "./../models/rules/Rule";
 import { GraphQLInt, GraphQLID } from "graphql/type/scalars";
 import { NonAuthenificatedUser } from "../models/users/NonAuthentificatedUser";
-import { logInfo } from "../services/LogService";
+// import { logInfo } from "../services/LogService";
 import { ImapConfigType } from "./types/ImapConfigType";
 import { saveImapConfig } from "../services/ImapConfigService";
 import { IImapConfigModel } from "../models/users/ImapConfig";
 import { Request as ExpressRequest } from "express";
+import { ApolloRequest } from "apollo-graphql-server";
 
 const mutation = new GraphQLObjectType({
   name: "Mutation",
@@ -29,8 +30,10 @@ const mutation = new GraphQLObjectType({
         firstName: { type: new GraphQLNonNull(GraphQLString) },
         lastName: { type: new GraphQLNonNull(GraphQLString) }
       },
-      resolve(_, user: NonAuthenificatedUser, req: ExpressRequest) {
-        logInfo("Authentificate mutation", { user }, req.user);
+      // tslint:disable-next-line:no-any
+      resolve(_, user: NonAuthenificatedUser, { req }: ApolloRequest) {
+        // console.log("Express request", req.req.login);
+        // logInfo("Authentificate mutation", { req }, req.user);
         return AuthService.authentificate(user, req);
       }
     },
@@ -40,13 +43,13 @@ const mutation = new GraphQLObjectType({
         email: { type: new GraphQLNonNull(GraphQLString) },
         password: { type: new GraphQLNonNull(GraphQLString) }
       },
-      resolve(_, { email, password }: IAuth, req: ExpressRequest) {
+      resolve(_, { email, password }: IAuth, { req }: ApolloRequest) {
         return AuthService.signup({ email, password }, req);
       }
     },
     logout: {
       type: UserType,
-      resolve(_, __, req) {
+      resolve(_, __, { req }: ApolloRequest) {
         const { user } = req;
         req.logout();
         return user;
@@ -58,7 +61,7 @@ const mutation = new GraphQLObjectType({
         email: { type: new GraphQLNonNull(GraphQLString) },
         password: { type: new GraphQLNonNull(GraphQLString) }
       },
-      resolve(_, { email, password }: IAuth, req: ExpressRequest) {
+      resolve(_, { email, password }: IAuth, { req }: ApolloRequest) {
         return AuthService.login({ email, password }, req);
       }
     },
@@ -87,7 +90,7 @@ const mutation = new GraphQLObjectType({
           description: "Id of rule, which will be deleted"
         }
       },
-      async resolve(_, { id }: { id: string }, req: ExpressRequest) {
+      async resolve(_, { id }: { id: string }, { req }: ApolloRequest) {
         return await deleteRule(id, req.user.id);
       }
     },
@@ -102,7 +105,7 @@ const mutation = new GraphQLObjectType({
       resolve(
         _,
         { userName, password, host, port }: IImapConfigModel,
-        req: ExpressRequest
+        { req }: ApolloRequest
       ) {
         return saveImapConfig(userName, password, host, port, req);
       }
@@ -120,7 +123,7 @@ const mutation = new GraphQLObjectType({
       async resolve(
         _,
         rule: IRuleModel,
-        req: ExpressRequest
+        { req }: ApolloRequest
       ) {
         return await updateRule(rule, req);
       }

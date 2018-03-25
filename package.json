@@ -95,6 +95,7 @@
     "@types/ramda": "^0.25.18",
     "@types/request": "2.47.0",
     "@types/supertest": "^2.0.4",
+    "apollo-engine": "^1.0.4",
     "concurrently": "^3.5.1",
     "jest": "^22.1.4",
     "nodemon": "^1.14.12",

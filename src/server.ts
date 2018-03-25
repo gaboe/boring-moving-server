@@ -20,7 +20,7 @@ import * as homeController from "./controllers/Home";
 import schema from "./schema/Schema";
 import * as cors from "cors";
 import { graphqlExpress, graphiqlExpress } from "apollo-server-express";
-
+const { ApolloEngine } = require("apollo-engine");
 const MongoStore = mongo(session);
 (<{ Promise: Function }>mongoose).Promise = global.Promise;
 /**
@@ -110,10 +110,15 @@ app.use((req, res, next) => {
 app.get("/", homeController.index);
 app.get("/job", homeController.startJob);
 
-app.use("/graphql", bodyParser.json(), graphqlExpress({
-  schema,
-  tracing: true,
-  cacheControl: true
+app.use("/graphql", bodyParser.json(), graphqlExpress(req => {
+  return {
+    context: {
+      req,
+    },
+    schema,
+    tracing: true,
+    cacheControl: true
+  };
 }));
 
 app.get("/graphiql", graphiqlExpress({ endpointURL: "/graphql" })); // if you want GraphiQL enabled
@@ -123,16 +128,30 @@ app.get("/graphiql", graphiqlExpress({ endpointURL: "/graphql" })); // if you wa
  */
 app.use(errorHandler());
 
+if (process.env.APOLLO_ENGINE_SECRET) {
+  const engine = new ApolloEngine({
+    apiKey: process.env.APOLLO_ENGINE_SECRET
+  });
+  engine.listen({
+    port: 3000,
+    expressApp: app,
+  });
+}
+else {
+  console.log(`Missing APOLLO_ENGINE_SECRET from config`);
+  process.exit();
+}
+
 /**
  * Start Express server.
  */
-app.listen(app.get("port"), () => {
-  console.log(
-    "App is running at http://localhost:%d in %s mode",
-    app.get("port"),
-    app.get("env")
-  );
-  console.log("Press CTRL-C to stop\n");
-});
+// app.listen(app.get("port"), () => {
+//   console.log(
+//     "App is running at http://localhost:%d in %s mode",
+//     app.get("port"),
+//     app.get("env")
+//   );
+//   console.log("Press CTRL-C to stop\n");
+// });
 
 module.exports = app;

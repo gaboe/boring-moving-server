@@ -2,7 +2,6 @@ import * as graphql from "graphql";
 import { getRuleByID } from "./../../services/RuleService";
 import { UserType } from "./UserType";
 import { RuleType } from "./RuleType";
-import { Request } from "express";
 import { IRuleModel } from "./../../models/rules/Rule";
 import { ImapConfigType } from "./ImapConfigType";
 import { getConfigByUserID } from "../../services/ImapConfigService";
@@ -10,6 +9,7 @@ import { GraphQLInt } from "graphql";
 import { IMetaStat } from "../../models/stat/MetaStat";
 import { MetaStatType } from "./MetaStatType";
 import { AppStatType } from "./AppStatType";
+import { ApolloRequest } from "apollo-graphql-server";
 
 const { GraphQLObjectType, GraphQLID, GraphQLNonNull } = graphql;
 
@@ -18,7 +18,7 @@ const RootQueryType = new GraphQLObjectType({
   fields: {
     user: {
       type: UserType,
-      resolve(_, __, req: Request) {
+      resolve(_, __, { req }: ApolloRequest) {
         return req.user;
       }
     },
@@ -31,14 +31,14 @@ const RootQueryType = new GraphQLObjectType({
     },
     imapConfig: {
       type: ImapConfigType,
-      resolve(_, __, req: Request) {
+      resolve(_, __, { req }: ApolloRequest) {
         return getConfigByUserID(req.user.id);
       }
     },
     mostActiveRules: {
       type: new GraphQLNonNull(MetaStatType),
       args: { count: { type: new GraphQLNonNull(GraphQLInt) } },
-      resolve(_, { count }: { count: number }, req: Request) {
+      resolve(_, { count }: { count: number }, { req }: ApolloRequest) {
         const metaStat: IMetaStat = {
           userID: req.user.id,
           takeRulesCount: count

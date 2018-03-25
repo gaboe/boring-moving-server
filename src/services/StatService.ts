@@ -56,7 +56,7 @@ const getJobRunByID = async (jobRunID: string) => {
 
 const getAllMovedEmailsCount = async (userID: string) => {
   const userStats = await Stat.find({ userID });
-  const count = userStats.map(x => x.movedEmailsCount).reduce((a, b) => a + b);
+  const count = userStats.map(x => x.movedEmailsCount).reduce((a, b) => a + b, 0);
   return count;
 };
 
