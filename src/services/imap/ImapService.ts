@@ -44,18 +44,17 @@ const processEmails = (
     imap: Imap,
     uids: string[],
   ) => void,
-  logs?: LogDefintion
+  logs?: LogDefintion,
+  forceBoxCreation: boolean = true
 ) => {
   const searchCriteria: SearchCriterias = createSearchCriteria(rule);
   if (logs) {
     logs.onSearchCriteriasCreated(searchCriteria);
   }
-  // log("SearchCriterias created", "info", rule.userID, rule.id, searchCriteria);
   const imap: Imap = new Imap(config);
 
   imap.once("ready", function () {
     openInbox(imap, function (_, __) {
-      // imap types are using any, think about sending PR
       // tslint:disable-next-line:no-any
       imap.search(searchCriteria as any[], async (_, uids) => {
         console.log("uids:", uids);
@@ -64,7 +63,6 @@ const processEmails = (
           if (logs) {
             logs.onNoValidEmailsDiscovered();
           }
-          // log("No valid mails discovered", "success", rule.userID, rule.id);
           return;
         }
         const validUIDs = Array<string>();
@@ -87,16 +85,10 @@ const processEmails = (
             if (logs) {
               logs.onNoValidEmailsDiscovered();
             }
-
-            // log("No valid mails discovered", "success", rule.userID, rule.id);
             return;
           }
-          // log("Moving emails", "info", rule.userID, rule.id, {
-          //   validUIDs,
-          //   boxname: rule.folderName
-          // });
           imap.openBox(rule.folderName, (openBoxError, _) => {
-            if (openBoxError) {
+            if (openBoxError && forceBoxCreation === true) {
               imap.addBox(rule.folderName, _ => {
                 processFn(imap, validUIDs);
               });
@@ -112,14 +104,12 @@ const processEmails = (
     if (logs) {
       logs.onConnectionError(err);
     }
-    // log("Connection error", "error", rule.userID, rule.id, { err, config });
   });
 
   imap.once("end", function () {
     if (logs) {
       logs.onConnectionEnd();
     }
-    // log("Connection ended", "info", rule.userID, rule.id);
   });
   imap.connect();
 };

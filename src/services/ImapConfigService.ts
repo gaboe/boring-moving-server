@@ -39,12 +39,12 @@ const getConfigByUserID = async (userID: string) => {
   return decryptImapConfig(await ImapConfig.findOne({ userID }));
 };
 
-const getFilledImapConfigByUserID = (userID: string) => {
-  return ImapConfig.findOne({ userID })
+const getFilledImapConfigByUserID = async (userID: string) => {
+  return decryptImapConfig(await ImapConfig.findOne({ userID })
     .where(nameof<IImapConfig>("userName"), { $ne: null })
     .where(nameof<IImapConfig>("password"), { $ne: null })
     .where(nameof<IImapConfig>("host"), { $ne: null })
-    .where(nameof<IImapConfig>("port"), { $ne: null });
+    .where(nameof<IImapConfig>("port"), { $ne: null }));
 };
 
 const hasCompleteImapConfig = async (userID: string) => {

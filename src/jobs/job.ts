@@ -53,7 +53,14 @@ const processUser = (user: IUserModel, jobRun: IJobRunModel) => {
     .eachAsync(rule => {
       log("Processing rule", "info", user.id, rule.id, rule);
       processEmails(config, rule,
-        (imap, uids) => moveEmails(imap, uids, rule, jobRun));
+        (imap, uids) => moveEmails(imap, uids, rule, jobRun),
+        {
+          onConnectionEnd: () => log("Connection ended", "info", rule.userID, rule.id),
+          onConnectionError: (err) => log("Connection error", "error", rule.userID, rule.id, { err, config }),
+          onFechError: (err) => log("Fetch error", "error", rule.userID, rule.id, err),
+          onNoValidEmailsDiscovered: () => log("No valid mails discovered", "success", rule.userID, rule.id),
+          onSearchCriteriasCreated: (searchCriteria) => log("SearchCriterias created", "info", rule.userID, rule.id, searchCriteria)
+        });
     });
 };
 
