@@ -133,7 +133,7 @@ if (process.env.APOLLO_ENGINE_SECRET) {
     apiKey: process.env.APOLLO_ENGINE_SECRET
   });
   engine.listen({
-    port: 3000,
+    port: process.env.PORT || 3000,
     expressApp: app,
   });
 }
